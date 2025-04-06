@@ -11,6 +11,10 @@ import ForgotPassword from "./pages/ForgotPassword";
 import VerificationCode from "./pages/VerificationCode";
 import ResetPassword from "./pages/ResetPassword";
 import ResetSuccess from "./pages/ResetSuccess";
+import Dashboard from "./pages/Dashboard";
+import DiseaseDetection from "./pages/DiseaseDetection";
+import ScanResults from "./pages/ScanResults";
+import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +33,10 @@ const App = () => (
           <Route path="/verification-code" element={<VerificationCode />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-success" element={<ResetSuccess />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/disease-detection" element={<DiseaseDetection />} />
+          <Route path="/scan-results" element={<ScanResults />} />
+          <Route path="/feedback" element={<Feedback />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
