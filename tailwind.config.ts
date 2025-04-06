@@ -26,11 +26,11 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#34813b', // AgriTech green
+					DEFAULT: '#4D7C0F', // Dark olive green
 					foreground: '#ffffff'
 				},
 				secondary: {
-					DEFAULT: '#a2db7f', // Light green
+					DEFAULT: '#84CC16', // Lime green
 					foreground: '#ffffff'
 				},
 				destructive: {
@@ -42,7 +42,7 @@ export default {
 					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: '#ebf7e3', // Very light green
+					DEFAULT: '#ECFCCB', // Very light lime
 					foreground: '#344054'
 				},
 				popover: {
@@ -54,11 +54,11 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				agritech: {
-					green: '#34813b',
-					lightGreen: '#a2db7f',
-					paleGreen: '#ebf7e3',
-					darkGreen: '#205225',
-					yellow: '#ffc73c',
+					green: '#4D7C0F', // Dark olive green (primary)
+					lightGreen: '#84CC16', // Lime green (secondary)
+					paleGreen: '#ECFCCB', // Very light lime (accent)
+					darkGreen: '#3F6212', // Darker olive green
+					yellow: '#EAB308', // Amber yellow
 				},
 			},
 			borderRadius: {

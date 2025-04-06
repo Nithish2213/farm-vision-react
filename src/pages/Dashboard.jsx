@@ -1,11 +1,21 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { Scan, Users, BookOpen, Truck, Phone, Users2, BanknoteIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 const Dashboard = () => {
+  const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    // Get user from localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
@@ -14,10 +24,10 @@ const Dashboard = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold">AgriTech Platform</h1>
           <div className="flex items-center">
-            <span className="mr-2 text-gray-600">Welcome back, John</span>
-            <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-white">
-              JD
-            </div>
+            <span className="mr-2 text-gray-600">Welcome back, {user?.name || 'Farmer'}</span>
+            <Link to="/profile" className="h-10 w-10 rounded-full bg-agritech-lightGreen/20 flex items-center justify-center text-agritech-darkGreen hover:bg-agritech-lightGreen/30 transition-colors">
+              {user ? user.name.charAt(0).toUpperCase() : 'U'}
+            </Link>
           </div>
         </div>
 
@@ -150,7 +160,7 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold mb-4">Live Stats & Impact</h3>
               <div className="flex justify-between">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">50,000+</div>
+                  <div className="text-2xl font-bold text-agritech-green">50,000+</div>
                   <div className="text-sm text-gray-500">Farmers Helped</div>
                 </div>
                 <div className="text-center">
@@ -170,7 +180,7 @@ const Dashboard = () => {
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-4">Testimonials</h3>
               <div className="space-y-4">
-                <div className="border-l-4 border-green-500 pl-4 py-1">
+                <div className="border-l-4 border-agritech-green pl-4 py-1">
                   <p className="text-sm italic">"The AI disease detection saved my entire crop. Incredible technology!"</p>
                   <p className="text-sm font-semibold mt-1">- Rajesh Kumar, Farmer</p>
                 </div>
@@ -195,7 +205,7 @@ const Dashboard = () => {
                     placeholder="Enter your email to stay updated with farming trends" 
                     className="px-4 py-2 border border-gray-300 rounded-l-md w-full md:w-80"
                   />
-                  <button className="bg-green-700 text-white px-4 py-2 rounded-r-md hover:bg-green-800 transition-colors">
+                  <button className="bg-agritech-darkGreen text-white px-4 py-2 rounded-r-md hover:bg-agritech-green transition-colors">
                     Subscribe
                   </button>
                 </div>

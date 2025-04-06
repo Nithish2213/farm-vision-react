@@ -1,10 +1,27 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // In a real app, we would verify credentials here
+    // For now, we'll just set the user in localStorage and redirect
+    localStorage.setItem('user', JSON.stringify({
+      name: email.split('@')[0], // Use part of the email as the name
+      email: email,
+      role: 'Farmer'
+    }));
+    
+    navigate('/dashboard');
+  };
 
   return (
     <div className="min-h-screen login-bg flex items-center justify-center p-4">
@@ -14,7 +31,7 @@ const Login = () => {
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Welcome Back!</h2>
           <p className="text-gray-600 mb-8">Sign in to access your farming dashboard</p>
           
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
               <input 
@@ -22,6 +39,9 @@ const Login = () => {
                 id="email"
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
             
@@ -33,6 +53,9 @@ const Login = () => {
                   id="password"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
                 <button 
                   type="button"

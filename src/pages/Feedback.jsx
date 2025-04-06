@@ -33,8 +33,8 @@ const Feedback = () => {
         <Card className="bg-white shadow-md rounded-lg overflow-hidden">
           <CardContent className="p-8">
             <div className="flex flex-col items-center mb-8">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                <Info className="h-6 w-6 text-green-600" />
+              <div className="w-12 h-12 bg-agritech-paleGreen rounded-full flex items-center justify-center mb-6">
+                <Info className="h-6 w-6 text-agritech-green" />
               </div>
               
               <p className="text-center text-gray-600 max-w-lg">
@@ -50,7 +50,7 @@ const Feedback = () => {
                     type="button"
                     className={`p-2 rounded-md border ${
                       (hover || rating) >= star
-                        ? 'text-yellow-400 border-green-200'
+                        ? 'text-yellow-400 border-agritech-lightGreen'
                         : 'text-gray-300 border-gray-200'
                     }`}
                     onClick={() => setRating(star)}
@@ -66,7 +66,7 @@ const Feedback = () => {
             <div className="mb-8">
               <textarea
                 rows="6"
-                className="w-full p-4 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                className="w-full p-4 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green"
                 placeholder="Share your experience or suggestions (optional)"
                 value={feedbackText}
                 onChange={(e) => setFeedbackText(e.target.value)}
@@ -76,7 +76,7 @@ const Feedback = () => {
             <div className="flex space-x-4 justify-center">
               <button
                 onClick={handleSubmitFeedback}
-                className="px-6 py-3 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 transition-colors"
+                className="px-6 py-3 bg-agritech-green text-white rounded-md font-medium hover:bg-agritech-darkGreen transition-colors"
               >
                 Submit Feedback
               </button>
