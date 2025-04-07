@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -111,7 +110,7 @@ const ItemDetails = () => {
     setTimeout(() => {
       const response = {
         sender: item.owner,
-        content: 'Thanks for your message. I'm looking forward to exchanging items with you.',
+        content: 'Thanks for your message. I\'m looking forward to exchanging items with you.',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isUser: false
       };
