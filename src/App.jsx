@@ -16,6 +16,8 @@ import DiseaseDetection from "./pages/DiseaseDetection";
 import ScanResults from "./pages/ScanResults";
 import Feedback from "./pages/Feedback";
 import Profile from "./pages/Profile";
+import FarmerExchange from "./pages/FarmerExchange";
+import ItemDetails from "./pages/ItemDetails";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +41,8 @@ const App = () => (
           <Route path="/scan-results" element={<ScanResults />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/farmer-exchange" element={<FarmerExchange />} />
+          <Route path="/item-details/:id" element={<ItemDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
