@@ -32,11 +32,9 @@ const ItemDetails = () => {
   });
   const messageContainerRef = useRef(null);
   
-  // Example statuses for a more realistic UI
   const [userStatus] = useState('Online');
 
   useEffect(() => {
-    // Simulate fetching item data
     const items = [
       {
         id: 1,
@@ -63,7 +61,6 @@ const ItemDetails = () => {
     const foundItem = items.find(item => item.id === parseInt(id));
     setItem(foundItem);
 
-    // Example initial messages
     setMessages([
       {
         sender: 'John Smith',
@@ -87,7 +84,6 @@ const ItemDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    // Scroll to bottom of messages when new messages are added
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
@@ -106,11 +102,10 @@ const ItemDetails = () => {
     setMessages([...messages, newMsg]);
     setNewMessage('');
 
-    // Simulate a response after a short delay
     setTimeout(() => {
       const response = {
         sender: item.owner,
-        content: 'Thanks for your message. I\'m looking forward to exchanging items with you.',
+        content: "Thanks for your message. I'm looking forward to exchanging items with you.",
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         isUser: false
       };
@@ -167,7 +162,6 @@ const ItemDetails = () => {
       <Sidebar />
       
       <div className="flex-1 grid md:grid-cols-3 h-screen">
-        {/* Left Column: Item Details */}
         <div className="p-6 border-r border-gray-200 flex flex-col overflow-y-auto">
           <div className="bg-white rounded-lg shadow-sm p-5 mb-5">
             <div className="mb-4 rounded-lg overflow-hidden">
@@ -227,7 +221,6 @@ const ItemDetails = () => {
           </div>
         </div>
         
-        {/* Right Column: Chat */}
         <div className="md:col-span-2 flex flex-col h-screen">
           <div className="bg-white p-4 border-b border-gray-200 flex items-center">
             <Avatar className="h-10 w-10 mr-3">
@@ -300,7 +293,6 @@ const ItemDetails = () => {
         </div>
       </div>
 
-      {/* Self Pickup Confirmation Dialog */}
       <Dialog open={showSelfPickupConfirm} onOpenChange={setShowSelfPickupConfirm}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -368,7 +360,6 @@ const ItemDetails = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delivery Form Dialog */}
       <Dialog open={showDeliveryForm} onOpenChange={setShowDeliveryForm}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -466,7 +457,6 @@ const ItemDetails = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delivery Confirmation Dialog */}
       <Dialog open={showDeliveryConfirm} onOpenChange={setShowDeliveryConfirm}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
