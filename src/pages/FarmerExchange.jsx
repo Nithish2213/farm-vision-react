@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -52,7 +51,7 @@ const FarmerExchange = () => {
       owner: 'Sarah Davis',
       location: 'Sunflower Fields',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: 'Traditional heirloom corn seeds passed down through generations. These non-GMO seeds produce sweet, flavorful corn that's perfect for direct consumption or processing.'
+      description: "Traditional heirloom corn seeds passed down through generations. These non-GMO seeds produce sweet, flavorful corn that's perfect for direct consumption or processing."
     },
     {
       id: 5,
@@ -77,12 +76,10 @@ const FarmerExchange = () => {
   ];
 
   const filteredItems = items.filter(item => {
-    // Apply category filter
     if (activeTab !== 'All Items' && item.category !== activeTab) {
       return false;
     }
 
-    // Apply search filter
     if (searchQuery && !item.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !item.owner.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !item.location.toLowerCase().includes(searchQuery.toLowerCase())) {
