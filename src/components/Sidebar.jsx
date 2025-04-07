@@ -79,7 +79,7 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink 
-              to="/market" 
+              to="/farmer-exchange" 
               className={({ isActive }) => 
                 `flex items-center px-4 py-3 rounded-md transition-colors ${
                   isActive 
