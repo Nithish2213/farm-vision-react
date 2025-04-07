@@ -17,7 +17,11 @@ import ScanResults from "./pages/ScanResults";
 import Feedback from "./pages/Feedback";
 import Profile from "./pages/Profile";
 import FarmerExchange from "./pages/FarmerExchange";
-import ItemDetails from "./pages/ItemDetails";
+import ProductDetails from "./pages/ProductDetails";
+import DeliveryDetails from "./pages/DeliveryDetails";
+import OrderReview from "./pages/OrderReview";
+import OrderSuccess from "./pages/OrderSuccess";
+import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,7 +47,11 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="/farmer-exchange" element={<FarmerExchange />} />
           <Route path="/market" element={<FarmerExchange />} />
-          <Route path="/item-details/:id" element={<ItemDetails />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/delivery-details/:id" element={<DeliveryDetails />} />
+          <Route path="/order-review/:id" element={<OrderReview />} />
+          <Route path="/order-success/:id" element={<OrderSuccess />} />
+          <Route path="/order-tracking/:id" element={<OrderTracking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

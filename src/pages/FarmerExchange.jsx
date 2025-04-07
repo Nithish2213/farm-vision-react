@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -9,7 +10,6 @@ import { Separator } from '@/components/ui/separator';
 const FarmerExchange = () => {
   const [activeTab, setActiveTab] = useState('All Items');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
 
   const items = [
@@ -91,15 +91,10 @@ const FarmerExchange = () => {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setSelectedItem(null);
   };
 
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
-  };
-
-  const handleRequestExchange = (itemId) => {
-    navigate(`/item-details/${itemId}`);
+  const handleItemClick = (itemId) => {
+    navigate(`/product/${itemId}`);
   };
 
   return (
@@ -121,9 +116,9 @@ const FarmerExchange = () => {
             />
           </div>
           
-          <div className="flex space-x-2 mb-4">
+          <div className="flex space-x-2 mb-4 overflow-x-auto pb-2">
             <button
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-4 py-2 rounded-md transition-colors whitespace-nowrap ${
                 activeTab === 'All Items'
                   ? 'bg-agritech-green text-white'
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -133,7 +128,7 @@ const FarmerExchange = () => {
               All Items
             </button>
             <button
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-4 py-2 rounded-md transition-colors whitespace-nowrap ${
                 activeTab === 'Seeds'
                   ? 'bg-agritech-green text-white'
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -143,7 +138,7 @@ const FarmerExchange = () => {
               Seeds
             </button>
             <button
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-4 py-2 rounded-md transition-colors whitespace-nowrap ${
                 activeTab === 'Fertilizers'
                   ? 'bg-agritech-green text-white'
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -153,7 +148,7 @@ const FarmerExchange = () => {
               Fertilizers
             </button>
             <button
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-4 py-2 rounded-md transition-colors whitespace-nowrap ${
                 activeTab === 'Pesticides'
                   ? 'bg-agritech-green text-white'
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
@@ -162,95 +157,55 @@ const FarmerExchange = () => {
             >
               Pesticides
             </button>
+            <button
+              className={`px-4 py-2 rounded-md transition-colors whitespace-nowrap ${
+                activeTab === 'Tools'
+                  ? 'bg-agritech-green text-white'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+              }`}
+              onClick={() => handleTabChange('Tools')}
+            >
+              Tools
+            </button>
           </div>
         </div>
 
-        {selectedItem ? (
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <div className="flex flex-col md:flex-row">
-              <div className="md:w-1/3 mb-4 md:mb-0 md:mr-6">
-                <div className="rounded-lg overflow-hidden mb-4">
-                  <img 
-                    src={selectedItem.image} 
-                    alt={selectedItem.name} 
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
-                <div className="flex items-center mb-2 text-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredItems.map((item) => (
+            <Card 
+              key={item.id} 
+              className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => handleItemClick(item.id)}
+            >
+              <div className="h-48 overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <CardContent className="p-4">
+                <h3 className="text-lg font-semibold text-agritech-darkGreen">{item.name}</h3>
+                <p className="text-sm text-gray-500 mb-1">Category: {item.category}</p>
+                <p className="text-sm text-gray-500 mb-2">Available: {item.quantity}</p>
+                
+                <div className="flex items-center mb-1 text-sm">
                   <User className="h-4 w-4 mr-1 text-agritech-green" />
-                  <span>{selectedItem.owner}</span>
+                  <span>{item.owner}</span>
                 </div>
+                
                 <div className="flex items-center text-sm">
                   <MapPin className="h-4 w-4 mr-1 text-agritech-green" />
-                  <span>{selectedItem.location}</span>
+                  <span>{item.location}</span>
                 </div>
-              </div>
-              
-              <div className="md:w-2/3">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h2 className="text-xl font-semibold text-agritech-darkGreen">{selectedItem.name}</h2>
-                    <p className="text-sm text-gray-500">Category: {selectedItem.category}</p>
-                    <p className="text-sm text-gray-500 mb-4">Quantity: {selectedItem.quantity}</p>
-                  </div>
-                  <Button 
-                    className="bg-agritech-green hover:bg-agritech-darkGreen text-white"
-                    onClick={() => handleRequestExchange(selectedItem.id)}
-                  >
-                    Request Exchange
-                  </Button>
-                </div>
-                
-                <Separator className="my-4" />
-                
-                <div>
-                  <h3 className="font-medium mb-2">Description</h3>
-                  <p className="text-gray-700">{selectedItem.description}</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 flex justify-end">
-              <Button 
-                variant="outline" 
-                className="border-agritech-green text-agritech-green hover:bg-agritech-green/10"
-                onClick={() => setSelectedItem(null)}
-              >
-                Back to Items
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => (
-              <Card 
-                key={item.id} 
-                className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => handleItemClick(item)}
-              >
-                <div className="h-48 overflow-hidden">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="text-lg font-semibold text-agritech-darkGreen">{item.name}</h3>
-                  <p className="text-sm text-gray-500 mb-2">Quantity: {item.quantity}</p>
-                  
-                  <div className="flex items-center mb-1 text-sm">
-                    <User className="h-4 w-4 mr-1 text-agritech-green" />
-                    <span>{item.owner}</span>
-                  </div>
-                  
-                  <div className="flex items-center text-sm">
-                    <MapPin className="h-4 w-4 mr-1 text-agritech-green" />
-                    <span>{item.location}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        {filteredItems.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-gray-500">No items found matching your search criteria.</p>
           </div>
         )}
       </div>
