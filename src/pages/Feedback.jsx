@@ -50,7 +50,7 @@ const Feedback = () => {
                     type="button"
                     className={`p-2 rounded-md border ${
                       (hover || rating) >= star
-                        ? 'text-yellow-400 border-agritech-lightGreen'
+                        ? 'text-agritech-yellow border-agritech-lightGreen'
                         : 'text-gray-300 border-gray-200'
                     }`}
                     onClick={() => setRating(star)}

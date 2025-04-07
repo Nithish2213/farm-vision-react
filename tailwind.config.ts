@@ -26,11 +26,11 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#4D7C0F', // Dark olive green
+					DEFAULT: '#2E7D32', // Forest green - professional and earthy
 					foreground: '#ffffff'
 				},
 				secondary: {
-					DEFAULT: '#84CC16', // Lime green
+					DEFAULT: '#66BB6A', // Mid-green - fresh and vibrant
 					foreground: '#ffffff'
 				},
 				destructive: {
@@ -42,8 +42,8 @@ export default {
 					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: '#ECFCCB', // Very light lime
-					foreground: '#344054'
+					DEFAULT: '#E8F5E9', // Very light green - subtle and calming
+					foreground: '#1B5E20'
 				},
 				popover: {
 					DEFAULT: 'hsl(var(--popover))',
@@ -54,11 +54,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				agritech: {
-					green: '#4D7C0F', // Dark olive green (primary)
-					lightGreen: '#84CC16', // Lime green (secondary)
-					paleGreen: '#ECFCCB', // Very light lime (accent)
-					darkGreen: '#3F6212', // Darker olive green
-					yellow: '#EAB308', // Amber yellow
+					green: '#2E7D32', // Forest green (primary)
+					lightGreen: '#66BB6A', // Mid-green (secondary)
+					paleGreen: '#E8F5E9', // Very light green (accent)
+					darkGreen: '#1B5E20', // Dark forest green
+					yellow: '#FBC02D', // Warm gold/amber for contrast
+					brown: '#795548', // Earth tone for soil/natural elements
+					blue: '#0288D1', // Water blue for irrigation themes
+					grey: '#ECEFF1', // Light neutral for backgrounds
 				},
 			},
 			borderRadius: {
