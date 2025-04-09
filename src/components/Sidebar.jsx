@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Microscope, ShoppingBasket, Truck, Phone, Users, BanknoteIcon, User, LogOut } from 'lucide-react';
@@ -8,12 +7,10 @@ const Sidebar = () => {
   const navigate = useNavigate();
   
   useEffect(() => {
-    // Get user from localStorage
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
-      // Redirect to login if no user found
       navigate('/login');
     }
   }, [navigate]);
@@ -23,7 +20,6 @@ const Sidebar = () => {
     navigate('/login');
   };
 
-  // Generate initials from the user's name
   const getInitials = (name) => {
     if (!name) return '';
     return name.split(' ')
@@ -34,7 +30,6 @@ const Sidebar = () => {
 
   return (
     <div className="w-64 bg-agritech-darkGreen text-white min-h-screen flex flex-col">
-      {/* Logo and Brand */}
       <div className="p-6">
         <div className="flex items-center">
           <div className="w-8 h-8 bg-white rounded-md flex items-center justify-center">
@@ -44,7 +39,6 @@ const Sidebar = () => {
         </div>
       </div>
       
-      {/* Navigation Menu */}
       <nav className="flex-1 px-4 py-6">
         <ul className="space-y-1">
           <li>
@@ -154,21 +148,6 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink 
-              to="/track-orders" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <Truck className="h-5 w-5 mr-3" />
-              Track Orders
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
               to="/profile" 
               className={({ isActive }) => 
                 `flex items-center px-4 py-3 rounded-md transition-colors ${
@@ -185,7 +164,6 @@ const Sidebar = () => {
         </ul>
       </nav>
       
-      {/* User Profile */}
       <div className="p-4 border-t border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex items-center">

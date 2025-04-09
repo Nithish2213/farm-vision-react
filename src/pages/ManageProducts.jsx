@@ -2,10 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Plus, Edit, Trash, Package, Tag, BarChart2, Truck, Users, Eye } from 'lucide-react';
+import { Plus, Edit, Trash, Package, Tag, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -275,146 +274,71 @@ const ManageProducts = () => {
             </div>
           </div>
           
-          <Tabs defaultValue="products">
-            <TabsList className="mb-6">
-              <TabsTrigger value="products">My Products</TabsTrigger>
-              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="products">
-              {products.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {products.map((product) => (
-                    <Card 
-                      key={product.id} 
-                      className="overflow-hidden hover:shadow-md transition-shadow"
-                    >
-                      <div className="h-48 overflow-hidden">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <CardContent className="p-4">
-                        <div className="flex justify-between">
-                          <h3 className="text-lg font-semibold text-agritech-darkGreen">
-                            {product.name}
-                          </h3>
-                          <div className="flex space-x-2">
-                            <button 
-                              className="text-gray-500 hover:text-agritech-green"
-                              onClick={() => handleEditProduct(product)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </button>
-                            <button 
-                              className="text-gray-500 hover:text-red-500"
-                              onClick={() => handleDeleteProduct(product.id)}
-                            >
-                              <Trash className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-                        <p className="text-sm text-gray-500 mb-1">Category: {product.category}</p>
-                        <p className="text-sm text-gray-500 mb-2">Available: {product.quantity} {product.unit}</p>
-                        <p className="text-lg font-semibold text-agritech-green mb-4">₹{product.price}/{product.unit}</p>
-                        
-                        <Button 
-                          variant="outline" 
-                          className="w-full text-agritech-green border-agritech-green"
-                          onClick={() => handleViewOrders(product)}
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Orders
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-16">
-                  <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <h2 className="text-xl font-medium text-gray-700 mb-2">No Products Listed</h2>
-                  <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                    You haven't listed any products yet. Add your first eco-friendly product to start selling.
-                  </p>
-                  <Button 
-                    className="bg-agritech-green text-white"
-                    onClick={handleAddProduct}
-                  >
-                    <Plus className="h-4 w-4 mr-2" /> Add Your First Product
-                  </Button>
-                </div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="dashboard">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-sm text-gray-500">Total Products</p>
-                        <p className="text-2xl font-bold text-agritech-darkGreen">{products.length}</p>
-                      </div>
-                      <Package className="h-10 w-10 text-agritech-green opacity-80" />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-sm text-gray-500">Active Orders</p>
-                        <p className="text-2xl font-bold text-agritech-darkGreen">0</p>
-                      </div>
-                      <Truck className="h-10 w-10 text-amber-500 opacity-80" />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-sm text-gray-500">Total Sales</p>
-                        <p className="text-2xl font-bold text-agritech-darkGreen">₹0</p>
-                      </div>
-                      <BarChart2 className="h-10 w-10 text-blue-500 opacity-80" />
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-sm text-gray-500">Total Customers</p>
-                        <p className="text-2xl font-bold text-agritech-darkGreen">0</p>
-                      </div>
-                      <Users className="h-10 w-10 text-purple-500 opacity-80" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="text-center py-16">
-                <Tag className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h2 className="text-xl font-medium text-gray-700 mb-2">Start Selling Today</h2>
-                <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                  Add your eco-friendly products to our marketplace and connect with buyers directly.
-                </p>
-                <Button 
-                  className="bg-agritech-green text-white"
-                  onClick={handleAddProduct}
+          {products.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((product) => (
+                <Card 
+                  key={product.id} 
+                  className="overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <Plus className="h-4 w-4 mr-2" /> Add Product
-                </Button>
-              </div>
-            </TabsContent>
-          </Tabs>
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between">
+                      <h3 className="text-lg font-semibold text-agritech-darkGreen">
+                        {product.name}
+                      </h3>
+                      <div className="flex space-x-2">
+                        <button 
+                          className="text-gray-500 hover:text-agritech-green"
+                          onClick={() => handleEditProduct(product)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button 
+                          className="text-gray-500 hover:text-red-500"
+                          onClick={() => handleDeleteProduct(product.id)}
+                        >
+                          <Trash className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-1">Category: {product.category}</p>
+                    <p className="text-sm text-gray-500 mb-2">Available: {product.quantity} {product.unit}</p>
+                    <p className="text-lg font-semibold text-agritech-green mb-4">₹{product.price}/{product.unit}</p>
+                    
+                    <Button 
+                      variant="outline" 
+                      className="w-full text-agritech-green border-agritech-green"
+                      onClick={() => handleViewOrders(product)}
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      View Orders
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h2 className="text-xl font-medium text-gray-700 mb-2">No Products Listed</h2>
+              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                You haven't listed any products yet. Add your first eco-friendly product to start selling.
+              </p>
+              <Button 
+                className="bg-agritech-green text-white"
+                onClick={handleAddProduct}
+              >
+                <Plus className="h-4 w-4 mr-2" /> Add Your First Product
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       
