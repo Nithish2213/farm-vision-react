@@ -19,7 +19,7 @@ import Profile from "./pages/Profile";
 import FarmerExchange from "./pages/FarmerExchange";
 import ProductDetails from "./pages/ProductDetails";
 import DeliveryDetails from "./pages/DeliveryDetails";
-import OrderReview from "./pages/OrderReview";
+import BillSummary from "./pages/BillSummary";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderTracking from "./pages/OrderTracking";
 import NotFound from "./pages/NotFound";
@@ -49,7 +49,7 @@ const App = () => (
           <Route path="/market" element={<FarmerExchange />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/delivery-details/:id" element={<DeliveryDetails />} />
-          <Route path="/order-review/:id" element={<OrderReview />} />
+          <Route path="/bill-summary/:id" element={<BillSummary />} />
           <Route path="/order-success/:id" element={<OrderSuccess />} />
           <Route path="/order-tracking/:id" element={<OrderTracking />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

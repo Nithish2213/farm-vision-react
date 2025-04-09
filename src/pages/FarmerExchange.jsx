@@ -2,22 +2,44 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Search, MapPin, User } from 'lucide-react';
+import { Search, MapPin, User, Plus, Edit, Trash } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 const FarmerExchange = () => {
   const [activeTab, setActiveTab] = useState('All Items');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showAddProduct, setShowAddProduct] = useState(false);
+  const [showEditProduct, setShowEditProduct] = useState(false);
+  const [editProductId, setEditProductId] = useState(null);
+  const [isFarmer, setIsFarmer] = useState(true); // Mock farmer role - in real app would come from auth
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    category: 'Seeds',
+    quantity: '',
+    unit: 'kg',
+    price: '',
+    location: '',
+    description: '',
+    image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png', // Default image
+  });
   const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const items = [
+  // Mock data - in a real app, this would come from an API
+  const [items, setItems] = useState([
     {
       id: 1,
       name: 'Organic Tomato Seeds',
       category: 'Seeds',
-      quantity: '2kg',
+      quantity: 12,
+      unit: 'kg',
+      price: 150,
       owner: 'John Smith',
       location: 'Springfield Valley',
       image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
@@ -27,7 +49,9 @@ const FarmerExchange = () => {
       id: 2,
       name: 'Natural Compost',
       category: 'Fertilizers',
-      quantity: '25kg',
+      quantity: 250,
+      unit: 'kg',
+      price: 75,
       owner: 'Mary Johnson',
       location: 'Green Acres',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
@@ -37,7 +61,9 @@ const FarmerExchange = () => {
       id: 3,
       name: 'Bio Pesticide',
       category: 'Pesticides',
-      quantity: '5L',
+      quantity: 50,
+      unit: 'L',
+      price: 200,
       owner: 'Robert Wilson',
       location: 'Harvest Hills',
       image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
@@ -47,7 +73,9 @@ const FarmerExchange = () => {
       id: 4,
       name: 'Heirloom Corn Seeds',
       category: 'Seeds',
-      quantity: '3kg',
+      quantity: 30,
+      unit: 'kg',
+      price: 120,
       owner: 'Sarah Davis',
       location: 'Sunflower Fields',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
@@ -57,7 +85,9 @@ const FarmerExchange = () => {
       id: 5,
       name: 'Organic Fish Emulsion',
       category: 'Fertilizers',
-      quantity: '10L',
+      quantity: 100,
+      unit: 'L',
+      price: 180,
       owner: 'James Miller',
       location: 'Riverside Farm',
       image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
@@ -67,13 +97,15 @@ const FarmerExchange = () => {
       id: 6,
       name: 'Neem Oil Spray',
       category: 'Pesticides',
-      quantity: '2L',
+      quantity: 20,
+      unit: 'L',
+      price: 220,
       owner: 'Emma Brown',
       location: 'Mountain View',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
       description: 'Natural neem oil spray that works as both an insecticide and fungicide. Effective against a wide range of common garden pests and diseases while being safe for humans and pets.'
     }
-  ];
+  ]);
 
   const filteredItems = items.filter(item => {
     if (activeTab !== 'All Items' && item.category !== activeTab) {
@@ -97,13 +129,130 @@ const FarmerExchange = () => {
     navigate(`/product/${itemId}`);
   };
 
+  const handleBuyNow = (itemId) => {
+    navigate(`/delivery-details/${itemId}`);
+  };
+
+  const handleAddProduct = () => {
+    setShowAddProduct(true);
+  };
+
+  const handleEditProduct = (item) => {
+    setEditProductId(item.id);
+    setNewProduct({
+      name: item.name,
+      category: item.category,
+      quantity: item.quantity,
+      unit: item.unit,
+      price: item.price,
+      location: item.location,
+      description: item.description,
+      image: item.image,
+    });
+    setShowEditProduct(true);
+  };
+
+  const handleDeleteProduct = (id) => {
+    setItems(items.filter(item => item.id !== id));
+    toast({
+      title: "Product Deleted",
+      description: "Your product has been removed from the marketplace.",
+    });
+  };
+
+  const handleSubmitProduct = () => {
+    // Validate form
+    if (!newProduct.name || !newProduct.quantity || !newProduct.price) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newProductItem = {
+      id: items.length + 1, // This is a simplistic approach, in a real app you'd use a unique ID
+      ...newProduct,
+      owner: "You", // In a real app, this would be the current user's name
+    };
+
+    setItems([...items, newProductItem]);
+    setShowAddProduct(false);
+    setNewProduct({
+      name: '',
+      category: 'Seeds',
+      quantity: '',
+      unit: 'kg',
+      price: '',
+      location: '',
+      description: '',
+      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
+    });
+
+    toast({
+      title: "Product Added",
+      description: "Your product has been added to the marketplace.",
+    });
+  };
+
+  const handleUpdateProduct = () => {
+    // Validate form
+    if (!newProduct.name || !newProduct.quantity || !newProduct.price) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setItems(items.map(item => {
+      if (item.id === editProductId) {
+        return {
+          ...item,
+          ...newProduct,
+        };
+      }
+      return item;
+    }));
+
+    setShowEditProduct(false);
+    setEditProductId(null);
+    setNewProduct({
+      name: '',
+      category: 'Seeds',
+      quantity: '',
+      unit: 'kg',
+      price: '',
+      location: '',
+      description: '',
+      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
+    });
+
+    toast({
+      title: "Product Updated",
+      description: "Your product has been updated successfully.",
+    });
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       
       <div className="flex-1 p-6">
         <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
-          <h1 className="text-xl font-bold text-agritech-green mb-6">Trade Seeds, Fertilizers & Tools</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-xl font-bold text-agritech-green">Green Products Marketplace</h1>
+            {isFarmer && (
+              <Button 
+                className="bg-agritech-green text-white"
+                onClick={handleAddProduct}
+              >
+                <Plus className="h-4 w-4 mr-2" /> Add Product
+              </Button>
+            )}
+          </div>
           
           <div className="relative mb-4">
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -174,30 +323,62 @@ const FarmerExchange = () => {
           {filteredItems.map((item) => (
             <Card 
               key={item.id} 
-              className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => handleItemClick(item.id)}
+              className="overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="h-48 overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-cover"
+                  onClick={() => handleItemClick(item.id)}
+                  style={{ cursor: 'pointer' }}
                 />
               </div>
               <CardContent className="p-4">
-                <h3 className="text-lg font-semibold text-agritech-darkGreen">{item.name}</h3>
+                <div className="flex justify-between">
+                  <h3 
+                    className="text-lg font-semibold text-agritech-darkGreen cursor-pointer"
+                    onClick={() => handleItemClick(item.id)}
+                  >
+                    {item.name}
+                  </h3>
+                  {isFarmer && item.owner === "You" && (
+                    <div className="flex space-x-2">
+                      <button 
+                        className="text-gray-500 hover:text-agritech-green"
+                        onClick={() => handleEditProduct(item)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+                      <button 
+                        className="text-gray-500 hover:text-red-500"
+                        onClick={() => handleDeleteProduct(item.id)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <p className="text-sm text-gray-500 mb-1">Category: {item.category}</p>
-                <p className="text-sm text-gray-500 mb-2">Available: {item.quantity}</p>
+                <p className="text-sm text-gray-500 mb-2">Available: {item.quantity} {item.unit}</p>
+                <p className="text-lg font-semibold text-agritech-green mb-2">₹{item.price}/{item.unit}</p>
                 
-                <div className="flex items-center mb-1 text-sm">
+                <div className="flex items-center mb-3 text-sm">
                   <User className="h-4 w-4 mr-1 text-agritech-green" />
                   <span>{item.owner}</span>
                 </div>
                 
-                <div className="flex items-center text-sm">
+                <div className="flex items-center text-sm mb-4">
                   <MapPin className="h-4 w-4 mr-1 text-agritech-green" />
                   <span>{item.location}</span>
                 </div>
+                
+                <Button 
+                  className="w-full bg-agritech-green text-white hover:bg-agritech-darkGreen"
+                  onClick={() => handleBuyNow(item.id)}
+                >
+                  Buy Now
+                </Button>
               </CardContent>
             </Card>
           ))}
@@ -209,6 +390,219 @@ const FarmerExchange = () => {
           </div>
         )}
       </div>
+
+      {/* Add Product Dialog */}
+      <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Product</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Product Name*</Label>
+              <Input 
+                id="name" 
+                value={newProduct.name} 
+                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                placeholder="Enter product name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="category">Category*</Label>
+              <select 
+                id="category" 
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+              >
+                <option value="Seeds">Seeds</option>
+                <option value="Fertilizers">Fertilizers</option>
+                <option value="Pesticides">Pesticides</option>
+                <option value="Tools">Tools</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="quantity">Quantity*</Label>
+                <Input 
+                  id="quantity" 
+                  type="number"
+                  value={newProduct.quantity} 
+                  onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
+                  placeholder="Available quantity"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="unit">Unit*</Label>
+                <select 
+                  id="unit" 
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  value={newProduct.unit}
+                  onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
+                >
+                  <option value="kg">kg</option>
+                  <option value="g">g</option>
+                  <option value="L">L</option>
+                  <option value="pcs">pcs</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="price">Price per unit (₹)*</Label>
+              <Input 
+                id="price" 
+                type="number"
+                value={newProduct.price} 
+                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                placeholder="Price per unit"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location">Location*</Label>
+              <Input 
+                id="location" 
+                value={newProduct.location} 
+                onChange={(e) => setNewProduct({...newProduct, location: e.target.value})}
+                placeholder="Your location"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea 
+                id="description" 
+                value={newProduct.description} 
+                onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
+                placeholder="Describe your product"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image">Image URL</Label>
+              <Input 
+                id="image" 
+                value={newProduct.image} 
+                onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
+                placeholder="Product image URL"
+              />
+              <p className="text-xs text-gray-500">Use a public image URL or upload to an image hosting service</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowAddProduct(false)}>Cancel</Button>
+            <Button className="bg-agritech-green" onClick={handleSubmitProduct}>Add Product</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Product Dialog */}
+      <Dialog open={showEditProduct} onOpenChange={setShowEditProduct}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Product</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-name">Product Name*</Label>
+              <Input 
+                id="edit-name" 
+                value={newProduct.name} 
+                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-category">Category*</Label>
+              <select 
+                id="edit-category" 
+                className="w-full p-2 border border-gray-300 rounded-md"
+                value={newProduct.category}
+                onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
+              >
+                <option value="Seeds">Seeds</option>
+                <option value="Fertilizers">Fertilizers</option>
+                <option value="Pesticides">Pesticides</option>
+                <option value="Tools">Tools</option>
+              </select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-quantity">Quantity*</Label>
+                <Input 
+                  id="edit-quantity" 
+                  type="number"
+                  value={newProduct.quantity} 
+                  onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="edit-unit">Unit*</Label>
+                <select 
+                  id="edit-unit" 
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  value={newProduct.unit}
+                  onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
+                >
+                  <option value="kg">kg</option>
+                  <option value="g">g</option>
+                  <option value="L">L</option>
+                  <option value="pcs">pcs</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-price">Price per unit (₹)*</Label>
+              <Input 
+                id="edit-price" 
+                type="number"
+                value={newProduct.price} 
+                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-location">Location*</Label>
+              <Input 
+                id="edit-location" 
+                value={newProduct.location} 
+                onChange={(e) => setNewProduct({...newProduct, location: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea 
+                id="edit-description" 
+                value={newProduct.description} 
+                onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-image">Image URL</Label>
+              <Input 
+                id="edit-image" 
+                value={newProduct.image} 
+                onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEditProduct(false)}>Cancel</Button>
+            <Button className="bg-agritech-green" onClick={handleUpdateProduct}>Update Product</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

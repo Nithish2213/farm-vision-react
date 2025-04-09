@@ -18,6 +18,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     // Simulate API call to fetch product details
@@ -29,6 +30,7 @@ const ProductDetails = () => {
           category: 'Seeds',
           availableQuantity: 12,
           unit: 'kg',
+          price: 150,
           owner: 'John Smith',
           location: 'Springfield Valley',
           image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
@@ -50,6 +52,7 @@ const ProductDetails = () => {
           category: 'Fertilizers',
           availableQuantity: 250,
           unit: 'kg',
+          price: 75,
           owner: 'Mary Johnson',
           location: 'Green Acres',
           image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
@@ -71,6 +74,7 @@ const ProductDetails = () => {
           category: 'Pesticides',
           availableQuantity: 50,
           unit: 'L',
+          price: 200,
           owner: 'Robert Wilson',
           location: 'Harvest Hills',
           image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
@@ -92,6 +96,7 @@ const ProductDetails = () => {
           category: 'Seeds',
           availableQuantity: 30,
           unit: 'kg',
+          price: 120,
           owner: 'Sarah Davis',
           location: 'Sunflower Fields',
           image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
@@ -113,6 +118,7 @@ const ProductDetails = () => {
           category: 'Fertilizers',
           availableQuantity: 100,
           unit: 'L',
+          price: 180,
           owner: 'James Miller',
           location: 'Riverside Farm',
           image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
@@ -134,6 +140,7 @@ const ProductDetails = () => {
           category: 'Pesticides',
           availableQuantity: 20,
           unit: 'L',
+          price: 220,
           owner: 'Emma Brown',
           location: 'Mountain View',
           image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
@@ -153,15 +160,23 @@ const ProductDetails = () => {
       
       const foundProduct = items.find(item => item.id === parseInt(id));
       setProduct(foundProduct);
+      if (foundProduct) {
+        setTotalPrice(foundProduct.price * quantity);
+      }
       setLoading(false);
     }, 500);
-  }, [id]);
+  }, [id, quantity]);
 
   const handleQuantityChange = (newQuantity) => {
     setQuantity(newQuantity);
+    // Store selected quantity in local storage for use in next steps
+    localStorage.setItem('selectedQuantity', newQuantity);
+    if (product) {
+      setTotalPrice(product.price * newQuantity);
+    }
   };
 
-  const handleRequestExchange = () => {
+  const handleBuyNow = () => {
     // Store selected quantity in local storage for use in next steps
     localStorage.setItem('selectedQuantity', quantity);
     navigate(`/delivery-details/${id}`);
@@ -254,12 +269,18 @@ const ProductDetails = () => {
               
               <div className="mb-6">
                 <p className="text-gray-700 mb-4">{product.description}</p>
+                
+                <div className="flex justify-between items-center mb-3">
+                  <p className="text-gray-600 font-medium">Price:</p>
+                  <p className="text-xl font-semibold text-agritech-green">₹{product.price}/{product.unit}</p>
+                </div>
+                
                 <p className="text-gray-600 font-medium mb-2">Available Quantity:</p>
-                <p className="text-xl font-semibold text-agritech-darkGreen mb-4">
+                <p className="text-lg text-agritech-darkGreen mb-4">
                   {product.availableQuantity} {product.unit}
                 </p>
                 
-                <div className="flex items-center mb-6">
+                <div className="flex items-center mb-3">
                   <p className="text-gray-600 font-medium mr-4">Select Quantity:</p>
                   <QuantitySelector 
                     value={quantity} 
@@ -270,11 +291,16 @@ const ProductDetails = () => {
                   <span className="ml-2 text-gray-500">{product.unit}</span>
                 </div>
                 
+                <div className="flex justify-between items-center mb-5 p-3 bg-agritech-paleGreen rounded-lg">
+                  <p className="font-medium">Total Price:</p>
+                  <p className="text-xl font-bold text-agritech-darkGreen">₹{totalPrice}</p>
+                </div>
+                
                 <Button 
                   className="w-full bg-agritech-green hover:bg-agritech-darkGreen text-white py-6 text-base rounded-md transition-all hover:shadow-md"
-                  onClick={handleRequestExchange}
+                  onClick={handleBuyNow}
                 >
-                  Request Exchange
+                  Buy Now
                 </Button>
               </div>
             </div>
@@ -313,15 +339,15 @@ const ProductDetails = () => {
               <div className="flex items-center mb-4 md:mb-0">
                 <Leaf className="h-10 w-10 text-agritech-green mr-4" />
                 <div>
-                  <h3 className="text-lg font-semibold text-agritech-darkGreen">Ready to Exchange?</h3>
-                  <p className="text-gray-700">Request now to connect with {product.owner}</p>
+                  <h3 className="text-lg font-semibold text-agritech-darkGreen">Ready to Buy?</h3>
+                  <p className="text-gray-700">Get premium quality {product.name.toLowerCase()} at the best price</p>
                 </div>
               </div>
               <Button 
                 className="bg-agritech-green hover:bg-agritech-darkGreen text-white py-6 px-8 text-base rounded-md transition-all hover:shadow-md"
-                onClick={handleRequestExchange}
+                onClick={handleBuyNow}
               >
-                Request Exchange
+                Buy Now
               </Button>
             </div>
           </Card>

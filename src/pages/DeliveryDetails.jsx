@@ -8,13 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Truck, Users, ArrowLeft, MapPin } from 'lucide-react';
+import { Truck, ArrowLeft, MapPin } from 'lucide-react';
+import QuantitySelector from '../components/QuantitySelector';
 
 const deliveryFormSchema = z.object({
   fullName: z.string().min(3, { message: 'Full name must be at least 3 characters' }),
@@ -22,9 +22,6 @@ const deliveryFormSchema = z.object({
   address: z.string().min(5, { message: 'Address must be at least 5 characters' }),
   landmark: z.string().optional(),
   pinCode: z.string().min(5, { message: 'Please enter a valid PIN code' }),
-  deliveryMethod: z.enum(['home', 'meetup'], { 
-    required_error: 'Please select a delivery method' 
-  }),
   specialInstructions: z.string().optional()
 });
 
@@ -35,6 +32,7 @@ const DeliveryDetails = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const form = useForm({
     resolver: zodResolver(deliveryFormSchema),
@@ -44,7 +42,6 @@ const DeliveryDetails = () => {
       address: '',
       landmark: '',
       pinCode: '',
-      deliveryMethod: 'home',
       specialInstructions: ''
     }
   });
@@ -65,6 +62,7 @@ const DeliveryDetails = () => {
           category: 'Seeds',
           availableQuantity: 12,
           unit: 'kg',
+          price: 150,
           owner: 'John Smith',
           location: 'Springfield Valley',
           image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png'
@@ -75,6 +73,7 @@ const DeliveryDetails = () => {
           category: 'Fertilizers',
           availableQuantity: 250,
           unit: 'kg',
+          price: 75,
           owner: 'Mary Johnson',
           location: 'Green Acres',
           image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png'
@@ -85,6 +84,7 @@ const DeliveryDetails = () => {
           category: 'Pesticides',
           availableQuantity: 50,
           unit: 'L',
+          price: 200,
           owner: 'Robert Wilson',
           location: 'Harvest Hills',
           image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png'
@@ -95,6 +95,7 @@ const DeliveryDetails = () => {
           category: 'Seeds',
           availableQuantity: 30,
           unit: 'kg',
+          price: 120,
           owner: 'Sarah Davis',
           location: 'Sunflower Fields',
           image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png'
@@ -105,6 +106,7 @@ const DeliveryDetails = () => {
           category: 'Fertilizers',
           availableQuantity: 100,
           unit: 'L',
+          price: 180,
           owner: 'James Miller',
           location: 'Riverside Farm',
           image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png'
@@ -115,6 +117,7 @@ const DeliveryDetails = () => {
           category: 'Pesticides',
           availableQuantity: 20,
           unit: 'L',
+          price: 220,
           owner: 'Emma Brown',
           location: 'Mountain View',
           image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png'
@@ -123,16 +126,28 @@ const DeliveryDetails = () => {
       
       const foundProduct = items.find(item => item.id === parseInt(id));
       setProduct(foundProduct);
+      if (foundProduct) {
+        setTotalPrice(foundProduct.price * quantity);
+      }
       setLoading(false);
     }, 500);
-  }, [id]);
+  }, [id, quantity]);
+
+  const handleQuantityChange = (newQuantity) => {
+    setQuantity(newQuantity);
+    localStorage.setItem('selectedQuantity', newQuantity);
+    if (product) {
+      setTotalPrice(product.price * newQuantity);
+    }
+  };
 
   const onSubmit = (data) => {
-    // Store form data for order review page
+    // Store form data for bill summary page
     localStorage.setItem('deliveryDetails', JSON.stringify(data));
+    localStorage.setItem('totalPrice', totalPrice);
     
-    // Navigate to order review page
-    navigate(`/order-review/${id}`);
+    // Navigate to bill summary page
+    navigate(`/bill-summary/${id}`);
   };
 
   if (loading) {
@@ -185,13 +200,29 @@ const DeliveryDetails = () => {
                     alt={product.name} 
                     className="w-16 h-16 object-cover rounded-md mr-4"
                   />
-                  <div>
+                  <div className="flex-1">
                     <h3 className="font-medium text-agritech-darkGreen">{product.name}</h3>
-                    <p className="text-sm text-gray-600">Quantity: {quantity} {product.unit}</p>
-                    <p className="text-sm text-gray-600 flex items-center mt-1">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      {product.location}
-                    </p>
+                    <div className="flex items-center mt-2">
+                      <p className="text-sm text-gray-600 mr-4">Price: ₹{product.price}/{product.unit}</p>
+                      <div className="flex items-center">
+                        <span className="text-sm text-gray-600 mr-2">Quantity:</span>
+                        <QuantitySelector 
+                          value={quantity} 
+                          onChange={handleQuantityChange} 
+                          min={1} 
+                          max={product.availableQuantity}
+                          className="h-8 scale-90 origin-left"
+                        />
+                        <span className="ml-2 text-sm">{product.unit}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center mt-3">
+                      <p className="text-sm text-gray-600 flex items-center">
+                        <MapPin className="h-3 w-3 mr-1" />
+                        {product.location}
+                      </p>
+                      <p className="font-semibold text-agritech-darkGreen">Total: ₹{totalPrice}</p>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -271,45 +302,13 @@ const DeliveryDetails = () => {
                   />
                 </div>
                 
-                <FormField
-                  control={form.control}
-                  name="deliveryMethod"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel>Delivery Method</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-col space-y-1"
-                        >
-                          <div className="flex items-center space-x-2 border border-gray-200 p-3 rounded-md hover:bg-gray-50 cursor-pointer">
-                            <RadioGroupItem value="home" id="home" />
-                            <Label htmlFor="home" className="flex items-center cursor-pointer">
-                              <Truck className="h-4 w-4 mr-2 text-agritech-green" />
-                              <div>
-                                <p className="font-medium">Home Delivery</p>
-                                <p className="text-sm text-gray-500">Delivered to your specified address</p>
-                              </div>
-                            </Label>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2 border border-gray-200 p-3 rounded-md hover:bg-gray-50 cursor-pointer">
-                            <RadioGroupItem value="meetup" id="meetup" />
-                            <Label htmlFor="meetup" className="flex items-center cursor-pointer">
-                              <Users className="h-4 w-4 mr-2 text-agritech-green" />
-                              <div>
-                                <p className="font-medium">In-Person Meet-Up</p>
-                                <p className="text-sm text-gray-500">Arrange a meet-up at a convenient location</p>
-                              </div>
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="bg-gray-50 p-4 rounded-md mb-2">
+                  <div className="flex items-center mb-2">
+                    <Truck className="h-4 w-4 mr-2 text-agritech-green" />
+                    <Label className="font-medium">Home Delivery</Label>
+                  </div>
+                  <p className="text-sm text-gray-500">Your order will be delivered to your specified address</p>
+                </div>
                 
                 <FormField
                   control={form.control}
@@ -319,7 +318,7 @@ const DeliveryDetails = () => {
                       <FormLabel>Special Instructions (Optional)</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Any special instructions for delivery or meet-up" 
+                          placeholder="Any special instructions for delivery" 
                           {...field} 
                         />
                       </FormControl>
@@ -340,7 +339,7 @@ const DeliveryDetails = () => {
                     type="submit" 
                     className="bg-agritech-green hover:bg-agritech-darkGreen text-white px-8"
                   >
-                    Continue to Review
+                    Deliver to This Address
                   </Button>
                 </div>
               </form>
