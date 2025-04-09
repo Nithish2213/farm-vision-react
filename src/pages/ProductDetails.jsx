@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar';
 import StepIndicator from '../components/StepIndicator';
 import QuantitySelector from '../components/QuantitySelector';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -198,7 +198,7 @@ const ProductDetails = () => {
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar />
         <div className="flex-1 p-6 flex items-center justify-center">
-          <p>Product not found. <Button variant="link" onClick={() => navigate('/market')}>Return to marketplace</Button></p>
+          <p>Product not found. <Button variant="link" onClick={() => navigate('/farmer-exchange')}>Return to market</Button></p>
         </div>
       </div>
     );
@@ -215,7 +215,7 @@ const ProductDetails = () => {
           <Button 
             variant="ghost" 
             className="mb-4 text-agritech-green" 
-            onClick={() => navigate('/market')}
+            onClick={() => navigate('/farmer-exchange')}
           >
             &larr; Back to Market
           </Button>

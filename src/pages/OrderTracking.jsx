@@ -6,21 +6,21 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Check, Truck, MapPin, Calendar, Clock, Package, CheckCircle, X } from 'lucide-react';
+import { Check, Truck, MapPin, Calendar, Clock, Package, Home, CheckCircle, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 const statusOptions = [
-  { id: 'Pending', name: 'Order Pending', icon: Clock, time: '2 hours ago' },
-  { id: 'Packed', name: 'Order Packed', icon: Package, time: 'Estimated: Today' },
-  { id: 'Shipped', name: 'Shipped', icon: Truck, time: 'Estimated: Tomorrow' },
-  { id: 'Delivered', name: 'Delivered', icon: CheckCircle, time: 'Estimated: 5 days' }
+  { id: 'confirmed', name: 'Order Confirmed', icon: Check, time: '2 hours ago' },
+  { id: 'processing', name: 'Processing', icon: Package, time: 'Estimated: Today' },
+  { id: 'shipped', name: 'Shipped', icon: Truck, time: 'Estimated: Tomorrow' },
+  { id: 'delivered', name: 'Delivered', icon: CheckCircle, time: 'Estimated: 5 days' }
 ];
 
 const OrderTracking = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [currentStatus, setCurrentStatus] = useState('Pending');
+  const [currentStatus, setCurrentStatus] = useState('confirmed');
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [similarProducts, setSimilarProducts] = useState([]);
   
@@ -64,7 +64,7 @@ const OrderTracking = () => {
       description: "Your order has been cancelled successfully.",
     });
     setTimeout(() => {
-      navigate('/market');
+      navigate('/farmer-exchange');
     }, 1500);
   };
 
@@ -72,8 +72,8 @@ const OrderTracking = () => {
     navigate(`/product/${productId}`);
   };
 
-  // Show cancel option only for Pending and Packed statuses
-  const canCancel = ['Pending', 'Packed'].includes(currentStatus);
+  // Show cancel option only for confirmed and processing statuses
+  const canCancel = ['confirmed', 'processing'].includes(currentStatus);
   
   // Order information from localStorage
   const orderInfo = {
@@ -118,7 +118,7 @@ const OrderTracking = () => {
             <Button 
               variant="ghost" 
               className="text-agritech-green" 
-              onClick={() => navigate('/market')}
+              onClick={() => navigate('/farmer-exchange')}
             >
               Back to Market
             </Button>
