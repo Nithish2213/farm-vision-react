@@ -1,197 +1,147 @@
 
-import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Microscope, ShoppingBasket, Truck, Phone, Users, BanknoteIcon, User, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { Menu, X, Home, Leaf, ShoppingBag, MessageSquare, UserCircle, FolderSync, ChevronRight, Plus, Settings, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    // Get user from localStorage
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    } else {
-      // Redirect to login if no user found
-      navigate('/login');
-    }
-  }, [navigate]);
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
   };
 
-  // Generate initials from the user's name
-  const getInitials = (name) => {
-    if (!name) return '';
-    return name.split(' ')
-      .map(word => word.charAt(0).toUpperCase())
-      .join('')
-      .substring(0, 2);
-  };
+  const menuItems = [
+    { name: 'Dashboard', path: '/dashboard', icon: Home },
+    { name: 'Disease Detection', path: '/disease-detection', icon: Leaf },
+    { name: 'Market & Sales', path: '/market', icon: ShoppingBag },
+    { name: 'Feedback', path: '/feedback', icon: MessageSquare },
+    { name: 'Profile', path: '/profile', icon: UserCircle },
+  ];
 
   return (
-    <div className="w-64 bg-agritech-darkGreen text-white min-h-screen flex flex-col">
-      {/* Logo and Brand */}
-      <div className="p-6">
-        <div className="flex items-center">
-          <div className="w-8 h-8 bg-white rounded-md flex items-center justify-center">
-            <span className="text-agritech-green font-bold">A</span>
-          </div>
-          <span className="ml-3 text-xl font-semibold">AgriTech</span>
-        </div>
-      </div>
-      
-      {/* Navigation Menu */}
-      <nav className="flex-1 px-4 py-6">
-        <ul className="space-y-1">
-          <li>
-            <NavLink 
-              to="/dashboard" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <LayoutDashboard className="h-5 w-5 mr-3" />
-              Dashboard
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/disease-detection" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <Microscope className="h-5 w-5 mr-3" />
-              Disease Detection
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/farmer-exchange" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <ShoppingBasket className="h-5 w-5 mr-3" />
-              Market & Sales
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/supply-chain" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <Truck className="h-5 w-5 mr-3" />
-              Supply Chain
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/expert-connect" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <Phone className="h-5 w-5 mr-3" />
-              Expert Connect
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/community" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <Users className="h-5 w-5 mr-3" />
-              Farmer Community
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/investments" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <BanknoteIcon className="h-5 w-5 mr-3" />
-              Investments & Loans
-            </NavLink>
-          </li>
-          <li>
-            <NavLink 
-              to="/profile" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <User className="h-5 w-5 mr-3" />
-              My Profile
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-      
-      {/* User Profile */}
-      <div className="p-4 border-t border-white/10">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-              <span className="text-white">{user ? getInitials(user.name) : ''}</span>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm font-medium text-white">{user ? user.name : 'Loading...'}</p>
-              <p className="text-xs text-white/70">{user ? user.role : ''}</p>
-            </div>
-          </div>
-          <button 
-            onClick={handleLogout}
-            className="p-2 rounded-full hover:bg-white/10"
-            title="Logout"
+    <>
+      {/* Mobile menu button */}
+      <button
+        onClick={toggleSidebar}
+        className="fixed top-4 left-4 z-40 md:hidden p-2 rounded-full bg-white shadow-md text-agritech-green"
+        aria-label="Toggle Menu"
+      >
+        <Menu className="h-6 w-6" />
+      </button>
+
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
+      {/* Sidebar */}
+      <div
+        className={`fixed md:relative top-0 left-0 z-50 h-full w-64 bg-white shadow-lg transform ${
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        } transition-transform duration-300 ease-in-out md:transition-none flex flex-col`}
+      >
+        {/* Sidebar Header */}
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-xl font-bold text-agritech-darkGreen">AgriTech</h2>
+          <button
+            onClick={toggleSidebar}
+            className="md:hidden text-gray-500 hover:text-gray-700"
+            aria-label="Close Menu"
           >
-            <LogOut className="h-5 w-5 text-white/70" />
+            <X className="h-6 w-6" />
           </button>
         </div>
+        
+        {/* Sidebar Menu */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          <ul className="space-y-1 px-3">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.name}>
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-3 rounded-lg transition-colors ${
+                        isActive
+                          ? 'bg-agritech-paleGreen text-agritech-darkGreen font-medium'
+                          : 'text-gray-600 hover:bg-gray-100'
+                      }`
+                    }
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Icon className="h-5 w-5 mr-3" />
+                    <span>{item.name}</span>
+                  </NavLink>
+                </li>
+              );
+            })}
+          </ul>
+          
+          <div className="mt-6 px-4">
+            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">
+              Farmer Tools
+            </div>
+            <ul className="space-y-1 px-3">
+              <li>
+                <NavLink
+                  to="/manage-products"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-agritech-paleGreen text-agritech-darkGreen font-medium'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`
+                  }
+                  onClick={() => setIsOpen(false)}
+                >
+                  <FolderSync className="h-5 w-5 mr-3" />
+                  <span>Manage Products</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/order-tracking"
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-3 rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-agritech-paleGreen text-agritech-darkGreen font-medium'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`
+                  }
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ChevronRight className="h-5 w-5 mr-3" />
+                  <span>Track Orders</span>
+                </NavLink>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-agritech-paleGreen flex items-center justify-center text-agritech-green">
+                <UserCircle className="h-5 w-5" />
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-700">User Name</p>
+                <p className="text-xs text-gray-500">Farmer</p>
+              </div>
+            </div>
+            <button className="text-gray-500 hover:text-gray-700">
+              <LogOut className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

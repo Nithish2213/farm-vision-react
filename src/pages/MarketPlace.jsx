@@ -2,37 +2,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Search, MapPin, User, Plus, Edit, Trash } from 'lucide-react';
+import { Search, MapPin, User, Plus, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 
 const MarketPlace = () => {
   const [activeTab, setActiveTab] = useState('All Items');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAddProduct, setShowAddProduct] = useState(false);
-  const [showEditProduct, setShowEditProduct] = useState(false);
-  const [editProductId, setEditProductId] = useState(null);
-  const [isSeller, setIsSeller] = useState(true); // Mock seller role - in real app would come from auth
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    category: 'Seeds',
-    quantity: '',
-    unit: 'kg',
-    price: '',
-    location: '',
-    description: '',
-    image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png', // Default image
-  });
   const navigate = useNavigate();
   const { toast } = useToast();
 
   // Mock data - in a real app, this would come from an API
-  const [products, setProducts] = useState([
+  const [products] = useState([
     {
       id: 1,
       name: 'Organic Tomato Seeds',
@@ -43,7 +25,6 @@ const MarketPlace = () => {
       owner: 'John Smith',
       location: 'Springfield Valley',
       image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-      description: 'High-quality organic tomato seeds from heirloom varieties. These seeds have been carefully selected for disease resistance and high yield. Perfect for both small gardens and commercial farming.'
     },
     {
       id: 2,
@@ -55,7 +36,6 @@ const MarketPlace = () => {
       owner: 'Mary Johnson',
       location: 'Green Acres',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: 'Nutrient-rich natural compost made from organic materials. This compost is perfect for enriching soil and promoting healthy plant growth. Free from synthetic chemicals and safe for all types of crops.'
     },
     {
       id: 3,
@@ -67,7 +47,6 @@ const MarketPlace = () => {
       owner: 'Robert Wilson',
       location: 'Harvest Hills',
       image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-      description: 'Environmentally friendly bio pesticide that effectively controls pests without harming beneficial insects. Made from natural ingredients and safe for use on all food crops.'
     },
     {
       id: 4,
@@ -79,7 +58,6 @@ const MarketPlace = () => {
       owner: 'Sarah Davis',
       location: 'Sunflower Fields',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: "Traditional heirloom corn seeds passed down through generations. These non-GMO seeds produce sweet, flavorful corn that's perfect for direct consumption or processing."
     },
     {
       id: 5,
@@ -91,7 +69,6 @@ const MarketPlace = () => {
       owner: 'James Miller',
       location: 'Riverside Farm',
       image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-      description: 'Liquid fertilizer made from fish byproducts. Rich in nitrogen and other essential nutrients that promote healthy plant growth. Ideal for vegetable gardens and flower beds.'
     },
     {
       id: 6,
@@ -103,7 +80,6 @@ const MarketPlace = () => {
       owner: 'Emma Brown',
       location: 'Mountain View',
       image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: 'Natural neem oil spray that works as both an insecticide and fungicide. Effective against a wide range of common garden pests and diseases while being safe for humans and pets.'
     }
   ]);
 
@@ -137,107 +113,8 @@ const MarketPlace = () => {
     navigate('/manage-products');
   };
 
-  const handleAddProduct = () => {
-    setShowAddProduct(true);
-  };
-
-  const handleEditProduct = (product) => {
-    setEditProductId(product.id);
-    setNewProduct({
-      name: product.name,
-      category: product.category,
-      quantity: product.quantity,
-      unit: product.unit,
-      price: product.price,
-      location: product.location,
-      description: product.description,
-      image: product.image,
-    });
-    setShowEditProduct(true);
-  };
-
-  const handleDeleteProduct = (id) => {
-    setProducts(products.filter(product => product.id !== id));
-    toast({
-      title: "Product Deleted",
-      description: "Your product has been removed from the marketplace.",
-    });
-  };
-
-  const handleSubmitProduct = () => {
-    // Validate form
-    if (!newProduct.name || !newProduct.quantity || !newProduct.price) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const newProductItem = {
-      id: products.length + 1, // This is a simplistic approach, in a real app you'd use a unique ID
-      ...newProduct,
-      owner: "You", // In a real app, this would be the current user's name
-    };
-
-    setProducts([...products, newProductItem]);
-    setShowAddProduct(false);
-    setNewProduct({
-      name: '',
-      category: 'Seeds',
-      quantity: '',
-      unit: 'kg',
-      price: '',
-      location: '',
-      description: '',
-      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-    });
-
-    toast({
-      title: "Product Added",
-      description: "Your product has been added to the marketplace.",
-    });
-  };
-
-  const handleUpdateProduct = () => {
-    // Validate form
-    if (!newProduct.name || !newProduct.quantity || !newProduct.price) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setProducts(products.map(product => {
-      if (product.id === editProductId) {
-        return {
-          ...product,
-          ...newProduct,
-        };
-      }
-      return product;
-    }));
-
-    setShowEditProduct(false);
-    setEditProductId(null);
-    setNewProduct({
-      name: '',
-      category: 'Seeds',
-      quantity: '',
-      unit: 'kg',
-      price: '',
-      location: '',
-      description: '',
-      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-    });
-
-    toast({
-      title: "Product Updated",
-      description: "Your product has been updated successfully.",
-    });
+  const handleTrackOrders = () => {
+    navigate('/order-tracking/1');
   };
 
   return (
@@ -246,26 +123,22 @@ const MarketPlace = () => {
       
       <div className="flex-1 p-6">
         <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <h1 className="text-xl font-bold text-agritech-green">Green Products Marketplace</h1>
-            <div className="flex space-x-3">
-              {isSeller && (
-                <>
-                  <Button 
-                    className="bg-agritech-green text-white"
-                    onClick={handleAddProduct}
-                  >
-                    <Plus className="h-4 w-4 mr-2" /> Sell a Product
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="text-agritech-green border-agritech-green"
-                    onClick={handleManageProducts}
-                  >
-                    <Edit className="h-4 w-4 mr-2" /> Manage Products
-                  </Button>
-                </>
-              )}
+            <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+              <Button 
+                className="bg-agritech-green text-white"
+                onClick={() => navigate('/manage-products')}
+              >
+                <Plus className="h-4 w-4 mr-2" /> Sell a Product
+              </Button>
+              <Button 
+                variant="outline" 
+                className="text-agritech-green border-agritech-green"
+                onClick={handleTrackOrders}
+              >
+                <ChevronRight className="h-4 w-4 mr-2" /> Track Orders
+              </Button>
             </div>
           </div>
           
@@ -356,22 +229,6 @@ const MarketPlace = () => {
                   >
                     {product.name}
                   </h3>
-                  {isSeller && product.owner === "You" && (
-                    <div className="flex space-x-2">
-                      <button 
-                        className="text-gray-500 hover:text-agritech-green"
-                        onClick={() => handleEditProduct(product)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button 
-                        className="text-gray-500 hover:text-red-500"
-                        onClick={() => handleDeleteProduct(product.id)}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
                 </div>
                 <p className="text-sm text-gray-500 mb-1">Category: {product.category}</p>
                 <p className="text-sm text-gray-500 mb-2">Available: {product.quantity} {product.unit}</p>
@@ -404,219 +261,6 @@ const MarketPlace = () => {
           </div>
         )}
       </div>
-
-      {/* Add Product Dialog */}
-      <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Sell a New Product</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Product Name*</Label>
-              <Input 
-                id="name" 
-                value={newProduct.name} 
-                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-                placeholder="Enter product name"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="category">Category*</Label>
-              <select 
-                id="category" 
-                className="w-full p-2 border border-gray-300 rounded-md"
-                value={newProduct.category}
-                onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
-              >
-                <option value="Seeds">Seeds</option>
-                <option value="Fertilizers">Fertilizers</option>
-                <option value="Pesticides">Pesticides</option>
-                <option value="Tools">Tools</option>
-              </select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="quantity">Quantity*</Label>
-                <Input 
-                  id="quantity" 
-                  type="number"
-                  value={newProduct.quantity} 
-                  onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
-                  placeholder="Available quantity"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="unit">Unit*</Label>
-                <select 
-                  id="unit" 
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={newProduct.unit}
-                  onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
-                >
-                  <option value="kg">kg</option>
-                  <option value="g">g</option>
-                  <option value="L">L</option>
-                  <option value="pcs">pcs</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="price">Price per unit (₹)*</Label>
-              <Input 
-                id="price" 
-                type="number"
-                value={newProduct.price} 
-                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-                placeholder="Price per unit"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="location">Location*</Label>
-              <Input 
-                id="location" 
-                value={newProduct.location} 
-                onChange={(e) => setNewProduct({...newProduct, location: e.target.value})}
-                placeholder="Your location"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea 
-                id="description" 
-                value={newProduct.description} 
-                onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
-                placeholder="Describe your product"
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="image">Image URL</Label>
-              <Input 
-                id="image" 
-                value={newProduct.image} 
-                onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-                placeholder="Product image URL"
-              />
-              <p className="text-xs text-gray-500">Use a public image URL or upload to an image hosting service</p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddProduct(false)}>Cancel</Button>
-            <Button className="bg-agritech-green" onClick={handleSubmitProduct}>Add Product</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Product Dialog */}
-      <Dialog open={showEditProduct} onOpenChange={setShowEditProduct}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="edit-name">Product Name*</Label>
-              <Input 
-                id="edit-name" 
-                value={newProduct.name} 
-                onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="edit-category">Category*</Label>
-              <select 
-                id="edit-category" 
-                className="w-full p-2 border border-gray-300 rounded-md"
-                value={newProduct.category}
-                onChange={(e) => setNewProduct({...newProduct, category: e.target.value})}
-              >
-                <option value="Seeds">Seeds</option>
-                <option value="Fertilizers">Fertilizers</option>
-                <option value="Pesticides">Pesticides</option>
-                <option value="Tools">Tools</option>
-              </select>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-quantity">Quantity*</Label>
-                <Input 
-                  id="edit-quantity" 
-                  type="number"
-                  value={newProduct.quantity} 
-                  onChange={(e) => setNewProduct({...newProduct, quantity: e.target.value})}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="edit-unit">Unit*</Label>
-                <select 
-                  id="edit-unit" 
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={newProduct.unit}
-                  onChange={(e) => setNewProduct({...newProduct, unit: e.target.value})}
-                >
-                  <option value="kg">kg</option>
-                  <option value="g">g</option>
-                  <option value="L">L</option>
-                  <option value="pcs">pcs</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="edit-price">Price per unit (₹)*</Label>
-              <Input 
-                id="edit-price" 
-                type="number"
-                value={newProduct.price} 
-                onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="edit-location">Location*</Label>
-              <Input 
-                id="edit-location" 
-                value={newProduct.location} 
-                onChange={(e) => setNewProduct({...newProduct, location: e.target.value})}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="edit-description">Description</Label>
-              <Textarea 
-                id="edit-description" 
-                value={newProduct.description} 
-                onChange={(e) => setNewProduct({...newProduct, description: e.target.value})}
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="edit-image">Image URL</Label>
-              <Input 
-                id="edit-image" 
-                value={newProduct.image} 
-                onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditProduct(false)}>Cancel</Button>
-            <Button className="bg-agritech-green" onClick={handleUpdateProduct}>Update Product</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
