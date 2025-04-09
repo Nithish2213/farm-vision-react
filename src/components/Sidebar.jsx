@@ -79,10 +79,10 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink 
-              to="/farmer-exchange" 
+              to="/market-home" 
               className={({ isActive }) => 
                 `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
+                  isActive || location.pathname.includes('/market') || location.pathname.includes('/delivery') || location.pathname.includes('/billing')
                     ? 'bg-white/10 text-white' 
                     : 'text-white/70 hover:bg-white/5 hover:text-white'
                 }`
@@ -150,6 +150,21 @@ const Sidebar = () => {
             >
               <BanknoteIcon className="h-5 w-5 mr-3" />
               Investments & Loans
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="/track-orders" 
+              className={({ isActive }) => 
+                `flex items-center px-4 py-3 rounded-md transition-colors ${
+                  isActive 
+                    ? 'bg-white/10 text-white' 
+                    : 'text-white/70 hover:bg-white/5 hover:text-white'
+                }`
+              }
+            >
+              <Truck className="h-5 w-5 mr-3" />
+              Track Orders
             </NavLink>
           </li>
           <li>
