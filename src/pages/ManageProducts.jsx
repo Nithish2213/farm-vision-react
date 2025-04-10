@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -30,17 +29,12 @@ const ManageProducts = () => {
     unit: 'kg',
     price: '',
     description: '',
-    image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png', // Default image
+    image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
   });
   
   useEffect(() => {
-    // Get user info
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
-    // Get all products from localStorage
     const allProducts = JSON.parse(localStorage.getItem('sellerProducts') || '[]');
-    
-    // Filter products belonging to this user
     const userProducts = allProducts.filter(product => product.owner === user.name);
     setProducts(userProducts);
   }, []);
@@ -64,18 +58,10 @@ const ManageProducts = () => {
   };
 
   const handleDeleteProduct = (id) => {
-    // Get all products
     const allProducts = JSON.parse(localStorage.getItem('sellerProducts') || '[]');
-    
-    // Filter out the deleted product
     const updatedProducts = allProducts.filter(product => product.id !== id);
-    
-    // Update localStorage
     localStorage.setItem('sellerProducts', JSON.stringify(updatedProducts));
-    
-    // Update state
     setProducts(products.filter(product => product.id !== id));
-    
     toast({
       title: "Product Deleted",
       description: "Your product has been removed from the marketplace.",
@@ -83,7 +69,6 @@ const ManageProducts = () => {
   };
 
   const handleSubmitProduct = () => {
-    // Validate form
     if (!newProduct.name || !newProduct.quantity || !newProduct.price) {
       toast({
         title: "Missing Information",
@@ -93,28 +78,18 @@ const ManageProducts = () => {
       return;
     }
 
-    // Get user info
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-    // Create new product
     const productToAdd = {
-      id: Date.now(), // Generate a unique ID
+      id: Date.now(),
       ...newProduct,
       owner: user.name || 'Anonymous Seller',
       location: user.location || 'Location not specified',
     };
 
-    // Get all products
     const allProducts = JSON.parse(localStorage.getItem('sellerProducts') || '[]');
     allProducts.push(productToAdd);
-    
-    // Update localStorage
     localStorage.setItem('sellerProducts', JSON.stringify(allProducts));
-    
-    // Update state
     setProducts([...products, productToAdd]);
-    
-    // Reset form and close dialog
     setShowAddProduct(false);
     setNewProduct({
       name: '',
@@ -133,7 +108,6 @@ const ManageProducts = () => {
   };
 
   const handleUpdateProduct = () => {
-    // Validate form
     if (!newProduct.name || !newProduct.quantity || !newProduct.price) {
       toast({
         title: "Missing Information",
@@ -143,10 +117,7 @@ const ManageProducts = () => {
       return;
     }
 
-    // Get all products
     const allProducts = JSON.parse(localStorage.getItem('sellerProducts') || '[]');
-    
-    // Update the product
     const updatedProducts = allProducts.map(product => {
       if (product.id === editProductId) {
         return {
@@ -156,11 +127,7 @@ const ManageProducts = () => {
       }
       return product;
     });
-    
-    // Update localStorage
     localStorage.setItem('sellerProducts', JSON.stringify(updatedProducts));
-    
-    // Update state
     setProducts(products.map(product => {
       if (product.id === editProductId) {
         return {
@@ -170,8 +137,6 @@ const ManageProducts = () => {
       }
       return product;
     }));
-    
-    // Reset form and close dialog
     setShowEditProduct(false);
     setEditProductId(null);
     setNewProduct({
@@ -192,24 +157,18 @@ const ManageProducts = () => {
 
   const handleViewOrders = (product) => {
     setSelectedProduct(product);
-    
-    // Get all orders from localStorage
     const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    
-    // Filter orders for this product
     const productOrders = allOrders.filter(order => 
       order.product.id === product.id
     );
-    
     setProductOrders(productOrders);
     setShowViewOrders(true);
   };
 
   const handleUpdateOrderStatus = (orderId, newStatus) => {
-    // Get all orders
     const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    
-    // Update the order status
+    const orderToUpdate = allOrders.find(order => order.id === orderId);
+    const oldStatus = orderToUpdate?.status;
     const updatedOrders = allOrders.map(order => {
       if (order.id === orderId) {
         return {
@@ -219,11 +178,7 @@ const ManageProducts = () => {
       }
       return order;
     });
-    
-    // Update localStorage
     localStorage.setItem('orders', JSON.stringify(updatedOrders));
-    
-    // Update state
     setProductOrders(productOrders.map(order => {
       if (order.id === orderId) {
         return {
@@ -233,10 +188,9 @@ const ManageProducts = () => {
       }
       return order;
     }));
-    
     toast({
       title: "Status Updated",
-      description: `Order #${orderId} status changed to ${newStatus}.`,
+      description: `Order #${orderId} status changed from ${oldStatus} to ${newStatus}.`,
     });
   };
 
@@ -250,7 +204,7 @@ const ManageProducts = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Navigate to previous page
+    navigate(-1);
   };
 
   return (
@@ -355,7 +309,6 @@ const ManageProducts = () => {
         </div>
       </div>
       
-      {/* Add Product Dialog */}
       <Dialog open={showAddProduct} onOpenChange={setShowAddProduct}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -461,7 +414,6 @@ const ManageProducts = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Product Dialog */}
       <Dialog open={showEditProduct} onOpenChange={setShowEditProduct}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -561,7 +513,6 @@ const ManageProducts = () => {
         </DialogContent>
       </Dialog>
 
-      {/* View Orders Dialog */}
       <Dialog open={showViewOrders} onOpenChange={setShowViewOrders}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>

@@ -8,13 +8,14 @@ const Signup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     mobile: '',
     password: '',
-    location: '',
+    confirmPassword: '',
     category: 'Farmer'
   });
   
@@ -24,12 +25,27 @@ const Signup = () => {
     setShowPassword(!showPassword);
   };
 
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value
     });
+    
+    // Real-time validation for confirm password
+    if (name === 'confirmPassword' || name === 'password') {
+      if (name === 'confirmPassword' && value !== formData.password) {
+        setErrors({...errors, confirmPassword: "Passwords do not match"});
+      } else if (name === 'password' && value !== formData.confirmPassword && formData.confirmPassword) {
+        setErrors({...errors, confirmPassword: "Passwords do not match"});
+      } else {
+        setErrors({...errors, confirmPassword: null});
+      }
+    }
   };
 
   const validateForm = () => {
@@ -54,7 +70,12 @@ const Signup = () => {
       newErrors.password = "Password must be at least 6 characters";
     }
     
-    if (!formData.location.trim()) newErrors.location = "Location is required";
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    
     if (!formData.category) newErrors.category = "Please select a category";
     
     setErrors(newErrors);
@@ -106,14 +127,15 @@ const Signup = () => {
       // Get all users from localStorage
       const users = JSON.parse(localStorage.getItem('users') || '[]');
       
-      // Add new user
-      users.push(formData);
+      // Add new user (excluding confirmPassword)
+      const { confirmPassword, ...userToSave } = formData;
+      users.push(userToSave);
       
       // Save updated users list
       localStorage.setItem('users', JSON.stringify(users));
       
       // Also save current user info for auto-login
-      const { password, ...userInfo } = formData;
+      const { password, ...userInfo } = userToSave;
       localStorage.setItem('user', JSON.stringify(userInfo));
       
       // Show success toast
@@ -291,17 +313,26 @@ const Signup = () => {
             </div>
             
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-              <input 
-                type="text" 
-                id="location"
-                name="location"
-                className={`w-full px-4 py-2 border ${errors.location ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
-                placeholder="Your city or region"
-                value={formData.location}
-                onChange={handleChange}
-              />
-              {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+              <div className="relative">
+                <input 
+                  type={showConfirmPassword ? "text" : "password"} 
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className={`w-full px-4 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                <button 
+                  type="button"
+                  className="absolute right-3 top-2.5 text-gray-500"
+                  onClick={toggleConfirmPasswordVisibility}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+              {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
             </div>
             
             <button

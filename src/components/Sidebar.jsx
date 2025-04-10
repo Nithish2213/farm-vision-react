@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Microscope, ShoppingBasket, Truck, Phone, Users, BanknoteIcon, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, Microscope, ShoppingBasket, Truck, Phone, Users, BanknoteIcon, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
   const [user, setUser] = useState(null);
@@ -20,6 +20,10 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/login');
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   const getInitials = (name) => {
@@ -148,27 +152,16 @@ const Sidebar = () => {
               Investments & Loans
             </NavLink>
           </li>
-          <li>
-            <NavLink 
-              to="/profile" 
-              className={({ isActive }) => 
-                `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`
-              }
-            >
-              <User className="h-5 w-5 mr-3" />
-              My Profile
-            </NavLink>
-          </li>
+          {/* Removed Profile menu item */}
         </ul>
       </nav>
       
       <div className="p-4 border-t border-white/10">
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
+          <button 
+            onClick={handleProfileClick}
+            className="flex items-center cursor-pointer"
+          >
             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
               <span className="text-white">{user ? getInitials(user.name) : ''}</span>
             </div>
@@ -176,7 +169,7 @@ const Sidebar = () => {
               <p className="text-sm font-medium text-white">{user ? user.name : 'Loading...'}</p>
               <p className="text-xs text-white/70">{user ? user.role : ''}</p>
             </div>
-          </div>
+          </button>
           <button 
             onClick={handleLogout}
             className="p-2 rounded-full hover:bg-white/10"

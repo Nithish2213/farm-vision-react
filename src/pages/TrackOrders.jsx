@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 const statusOptions = [
   { id: 'pending', name: 'Pending', icon: Clock, color: 'text-amber-500' },
@@ -17,19 +17,54 @@ const statusOptions = [
 
 const TrackOrders = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [orders, setOrders] = useState([]);
+  const [lastStatusMap, setLastStatusMap] = useState({});
   
   useEffect(() => {
     // Get orders from localStorage
-    const storedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+    const fetchOrders = () => {
+      const storedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+      
+      // Sort orders by date (newest first)
+      const sortedOrders = storedOrders.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+      
+      setOrders(sortedOrders);
+      
+      // Store current status of each order to detect changes
+      const currentStatusMap = {};
+      sortedOrders.forEach(order => {
+        currentStatusMap[order.id] = order.status;
+      });
+      
+      // Check if any status has changed since last render
+      Object.keys(currentStatusMap).forEach(orderId => {
+        if (lastStatusMap[orderId] && lastStatusMap[orderId] !== currentStatusMap[orderId]) {
+          // Status changed, show notification
+          const order = sortedOrders.find(o => o.id.toString() === orderId);
+          const newStatus = currentStatusMap[orderId];
+          const statusDetails = statusOptions.find(s => s.id === newStatus);
+          
+          toast({
+            title: `Order #${orderId} Updated`,
+            description: `Your order status has changed to: ${statusDetails.name}`,
+          });
+        }
+      });
+      
+      setLastStatusMap(currentStatusMap);
+    };
     
-    // Sort orders by date (newest first)
-    const sortedOrders = storedOrders.sort((a, b) => {
-      return new Date(b.date) - new Date(a.date);
-    });
+    // Initial fetch
+    fetchOrders();
     
-    setOrders(sortedOrders);
-  }, []);
+    // Poll for changes (for real-time updates)
+    const interval = setInterval(fetchOrders, 3000);
+    
+    return () => clearInterval(interval);
+  }, [toast, lastStatusMap]);
 
   const getStatusIndex = (status) => {
     return statusOptions.findIndex(option => option.id === status);
