@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav className="bg-white shadow-sm py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">

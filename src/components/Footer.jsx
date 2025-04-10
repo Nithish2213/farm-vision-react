@@ -3,6 +3,25 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
+  // Check if we're in a context where router is available
+  // This helps prevent errors when the component is rendered outside router context
+  const isRouterAvailable = () => {
+    try {
+      // This will throw an error if we're outside router context
+      return window.location.pathname !== undefined;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  // If router isn't available, use regular anchor tags instead of Link
+  const LinkOrAnchor = ({ to, className, children }) => {
+    if (isRouterAvailable()) {
+      return <Link to={to} className={className}>{children}</Link>;
+    }
+    return <a href={to} className={className}>{children}</a>;
+  };
+
   return (
     <footer className="bg-gray-50 pt-16 pb-8">
       <div className="container mx-auto px-4">
@@ -17,20 +36,20 @@ const Footer = () => {
           <div>
             <h4 className="text-sm font-bold mb-4 uppercase text-gray-500">Features</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/features/ai" className="text-gray-600 hover:text-agritech-green">AI Predictions</Link></li>
-              <li><Link to="/features/tracking" className="text-gray-600 hover:text-agritech-green">Resource Tracking</Link></li>
-              <li><Link to="/features/community" className="text-gray-600 hover:text-agritech-green">Community</Link></li>
-              <li><Link to="/features/investment" className="text-gray-600 hover:text-agritech-green">Investment Tools</Link></li>
+              <li><LinkOrAnchor to="/features/ai" className="text-gray-600 hover:text-agritech-green">AI Predictions</LinkOrAnchor></li>
+              <li><LinkOrAnchor to="/features/tracking" className="text-gray-600 hover:text-agritech-green">Resource Tracking</LinkOrAnchor></li>
+              <li><LinkOrAnchor to="/features/community" className="text-gray-600 hover:text-agritech-green">Community</LinkOrAnchor></li>
+              <li><LinkOrAnchor to="/features/investment" className="text-gray-600 hover:text-agritech-green">Investment Tools</LinkOrAnchor></li>
             </ul>
           </div>
           
           <div>
             <h4 className="text-sm font-bold mb-4 uppercase text-gray-500">Company</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="text-gray-600 hover:text-agritech-green">About Us</Link></li>
-              <li><Link to="/blog" className="text-gray-600 hover:text-agritech-green">Blog</Link></li>
-              <li><Link to="/careers" className="text-gray-600 hover:text-agritech-green">Careers</Link></li>
-              <li><Link to="/contact" className="text-gray-600 hover:text-agritech-green">Contact Us</Link></li>
+              <li><LinkOrAnchor to="/about" className="text-gray-600 hover:text-agritech-green">About Us</LinkOrAnchor></li>
+              <li><LinkOrAnchor to="/blog" className="text-gray-600 hover:text-agritech-green">Blog</LinkOrAnchor></li>
+              <li><LinkOrAnchor to="/careers" className="text-gray-600 hover:text-agritech-green">Careers</LinkOrAnchor></li>
+              <li><LinkOrAnchor to="/contact" className="text-gray-600 hover:text-agritech-green">Contact Us</LinkOrAnchor></li>
             </ul>
           </div>
           
