@@ -1,11 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Microscope, ShoppingBasket, Truck, Phone, Users, BanknoteIcon, User, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
   
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -77,7 +78,7 @@ const Sidebar = () => {
               to="/market-home" 
               className={({ isActive }) => 
                 `flex items-center px-4 py-3 rounded-md transition-colors ${
-                  isActive || location.pathname.includes('/market') || location.pathname.includes('/delivery') || location.pathname.includes('/billing')
+                  isActive || location.pathname.includes('/market') || location.pathname.includes('/delivery') || location.pathname.includes('/billing') 
                     ? 'bg-white/10 text-white' 
                     : 'text-white/70 hover:bg-white/5 hover:text-white'
                 }`
