@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Plus, Edit, Trash, Package, Tag, Eye, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash, Package, Tag, Eye, ArrowLeft, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -21,6 +21,8 @@ const ManageProducts = () => {
   const [editProductId, setEditProductId] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productOrders, setProductOrders] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState('/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png');
   
   const [newProduct, setNewProduct] = useState({
     name: '',
@@ -39,12 +41,28 @@ const ManageProducts = () => {
     setProducts(userProducts);
   }, []);
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+        setSelectedImage(file);
+        setNewProduct({...newProduct, image: reader.result});
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddProduct = () => {
+    setPreviewImage('/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png');
+    setSelectedImage(null);
     setShowAddProduct(true);
   };
 
   const handleEditProduct = (product) => {
     setEditProductId(product.id);
+    setPreviewImage(product.image);
     setNewProduct({
       name: product.name,
       category: product.category,
@@ -397,14 +415,33 @@ const ManageProducts = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image">Image URL</Label>
-              <Input 
-                id="image" 
-                value={newProduct.image} 
-                onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-                placeholder="Product image URL"
-              />
-              <p className="text-xs text-gray-500">Default product image will be used if left empty</p>
+              <Label>Product Image</Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
+                {previewImage && (
+                  <div className="mb-3">
+                    <img 
+                      src={previewImage} 
+                      alt="Product preview" 
+                      className="h-40 mx-auto object-contain"
+                    />
+                  </div>
+                )}
+                <label 
+                  htmlFor="product-image" 
+                  className="flex flex-col items-center cursor-pointer"
+                >
+                  <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                  <span className="text-sm text-gray-600">Click to upload an image</span>
+                  <input
+                    id="product-image"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
+                <p className="text-xs text-gray-500 mt-2">Recommended size: 600x400 pixels</p>
+              </div>
             </div>
           </div>
           <DialogFooter>
@@ -498,12 +535,32 @@ const ManageProducts = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="edit-image">Image URL</Label>
-              <Input 
-                id="edit-image" 
-                value={newProduct.image} 
-                onChange={(e) => setNewProduct({...newProduct, image: e.target.value})}
-              />
+              <Label>Product Image</Label>
+              <div className="border-2 border-dashed border-gray-300 rounded-md p-4 text-center">
+                {previewImage && (
+                  <div className="mb-3">
+                    <img 
+                      src={previewImage} 
+                      alt="Product preview" 
+                      className="h-40 mx-auto object-contain"
+                    />
+                  </div>
+                )}
+                <label 
+                  htmlFor="edit-product-image" 
+                  className="flex flex-col items-center cursor-pointer"
+                >
+                  <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                  <span className="text-sm text-gray-600">Click to upload a new image</span>
+                  <input
+                    id="edit-product-image"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
+                </label>
+              </div>
             </div>
           </div>
           <DialogFooter>

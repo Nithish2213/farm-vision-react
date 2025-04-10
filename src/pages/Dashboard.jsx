@@ -11,7 +11,8 @@ import {
   Download, 
   Calendar, 
   Droplet, 
-  CloudSun 
+  CloudSun,
+  Bell
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -39,9 +40,10 @@ const Dashboard = () => {
               <span>▼</span>
             </div>
             <div className="relative">
-              <div className="h-6 w-6 bg-amber-400 rounded-full flex items-center justify-center text-sm">
+              <Bell className="h-6 w-6 text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full flex items-center justify-center text-xs">
                 2
-              </div>
+              </span>
             </div>
             <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
               {user ? user.name.charAt(0).toUpperCase() : 'U'}
@@ -100,7 +102,7 @@ const Dashboard = () => {
                 Trade tools/seeds with other farmers
               </p>
               <Link 
-                to="/farmer-exchange"
+                to="/market"
                 className="block w-full py-2 bg-blue-500 text-white text-center rounded-md hover:bg-blue-600 transition-colors"
               >
                 Start Trading
