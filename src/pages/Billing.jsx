@@ -68,6 +68,10 @@ const Billing = () => {
     navigate(`/order-confirmation/${orderId}`);
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to previous page
+  };
+
   if (!product || !deliveryInfo) {
     return (
       <div className="flex min-h-screen bg-gray-50">
@@ -84,17 +88,18 @@ const Billing = () => {
       <Sidebar />
       
       <div className="flex-1 p-6">
-        <div className="max-w-4xl mx-auto">
+        <Button 
+          variant="ghost" 
+          className="p-2 h-auto"
+          onClick={handleGoBack}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        
+        <div className="max-w-4xl mx-auto mt-4">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-bold text-agritech-green">Order Summary</h1>
-            <Button 
-              variant="ghost" 
-              className="text-agritech-green" 
-              onClick={() => navigate(`/delivery/${id}`)}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Edit Address
-            </Button>
           </div>
           
           <Card className="mb-6">

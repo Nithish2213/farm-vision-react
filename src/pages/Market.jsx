@@ -1,93 +1,102 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Search, MapPin, User } from 'lucide-react';
+import { Search, MapPin, User, ArrowLeft } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const Market = () => {
   const [activeTab, setActiveTab] = useState('All Items');
   const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
-  // Mock data - in a real app, this would come from an API
-  const items = [
-    {
-      id: 1,
-      name: 'Organic Tomato Seeds',
-      category: 'Seeds',
-      quantity: 12,
-      unit: 'kg',
-      price: 150,
-      owner: 'John Smith',
-      location: 'Springfield Valley',
-      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-      description: 'High-quality organic tomato seeds from heirloom varieties. These seeds have been carefully selected for disease resistance and high yield.'
-    },
-    {
-      id: 2,
-      name: 'Natural Compost',
-      category: 'Fertilizers',
-      quantity: 250,
-      unit: 'kg',
-      price: 75,
-      owner: 'Mary Johnson',
-      location: 'Green Acres',
-      image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: 'Nutrient-rich natural compost made from organic materials. This compost is perfect for enriching soil and promoting healthy plant growth.'
-    },
-    {
-      id: 3,
-      name: 'Bio Pesticide',
-      category: 'Pesticides',
-      quantity: 50,
-      unit: 'L',
-      price: 200,
-      owner: 'Robert Wilson',
-      location: 'Harvest Hills',
-      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-      description: 'Environmentally friendly bio pesticide that effectively controls pests without harming beneficial insects.'
-    },
-    {
-      id: 4,
-      name: 'Heirloom Corn Seeds',
-      category: 'Seeds',
-      quantity: 30,
-      unit: 'kg',
-      price: 120,
-      owner: 'Sarah Davis',
-      location: 'Sunflower Fields',
-      image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: "Traditional heirloom corn seeds passed down through generations. These non-GMO seeds produce sweet, flavorful corn."
-    },
-    {
-      id: 5,
-      name: 'Organic Fish Emulsion',
-      category: 'Fertilizers',
-      quantity: 100,
-      unit: 'L',
-      price: 180,
-      owner: 'James Miller',
-      location: 'Riverside Farm',
-      image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
-      description: 'Liquid fertilizer made from fish byproducts. Rich in nitrogen and other essential nutrients that promote healthy plant growth.'
-    },
-    {
-      id: 6,
-      name: 'Neem Oil Spray',
-      category: 'Pesticides',
-      quantity: 20,
-      unit: 'L',
-      price: 220,
-      owner: 'Emma Brown',
-      location: 'Mountain View',
-      image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
-      description: 'Natural neem oil spray that works as both an insecticide and fungicide. Effective against a wide range of common garden pests and diseases.'
-    }
-  ];
+  useEffect(() => {
+    // Mock data - in a real app, this would come from an API
+    const items = [
+      {
+        id: 1,
+        name: 'Organic Tomato Seeds',
+        category: 'Seeds',
+        quantity: 12,
+        unit: 'kg',
+        price: 150,
+        owner: 'John Smith',
+        location: 'Springfield Valley',
+        image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
+        description: 'High-quality organic tomato seeds from heirloom varieties. These seeds have been carefully selected for disease resistance and high yield.'
+      },
+      {
+        id: 2,
+        name: 'Natural Compost',
+        category: 'Fertilizers',
+        quantity: 250,
+        unit: 'kg',
+        price: 75,
+        owner: 'Mary Johnson',
+        location: 'Green Acres',
+        image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
+        description: 'Nutrient-rich natural compost made from organic materials. This compost is perfect for enriching soil and promoting healthy plant growth.'
+      },
+      {
+        id: 3,
+        name: 'Bio Pesticide',
+        category: 'Pesticides',
+        quantity: 50,
+        unit: 'L',
+        price: 200,
+        owner: 'Robert Wilson',
+        location: 'Harvest Hills',
+        image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
+        description: 'Environmentally friendly bio pesticide that effectively controls pests without harming beneficial insects.'
+      },
+      {
+        id: 4,
+        name: 'Heirloom Corn Seeds',
+        category: 'Seeds',
+        quantity: 30,
+        unit: 'kg',
+        price: 120,
+        owner: 'Sarah Davis',
+        location: 'Sunflower Fields',
+        image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
+        description: "Traditional heirloom corn seeds passed down through generations. These non-GMO seeds produce sweet, flavorful corn."
+      },
+      {
+        id: 5,
+        name: 'Organic Fish Emulsion',
+        category: 'Fertilizers',
+        quantity: 100,
+        unit: 'L',
+        price: 180,
+        owner: 'James Miller',
+        location: 'Riverside Farm',
+        image: '/lovable-uploads/dfae19bc-0068-4451-9902-2b41432ac120.png',
+        description: 'Liquid fertilizer made from fish byproducts. Rich in nitrogen and other essential nutrients that promote healthy plant growth.'
+      },
+      {
+        id: 6,
+        name: 'Neem Oil Spray',
+        category: 'Pesticides',
+        quantity: 20,
+        unit: 'L',
+        price: 220,
+        owner: 'Emma Brown',
+        location: 'Mountain View',
+        image: '/lovable-uploads/e748ea16-1c32-432e-a630-245153964862.png',
+        description: 'Natural neem oil spray that works as both an insecticide and fungicide. Effective against a wide range of common garden pests and diseases.'
+      }
+    ];
 
-  const filteredItems = items.filter(item => {
+    // Get seller products from local storage
+    const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts') || '[]');
+    
+    // Combine mock data with seller products
+    setProducts([...items, ...sellerProducts]);
+  }, []);
+
+  const filteredItems = products.filter(item => {
     if (activeTab !== 'All Items' && item.category !== activeTab) {
       return false;
     }
@@ -112,10 +121,14 @@ const Market = () => {
   const handleBuyNow = (itemId) => {
     // Save the selected product ID and navigate to delivery page
     localStorage.setItem('selectedProductId', itemId);
-    const selectedProduct = items.find(item => item.id === itemId);
+    const selectedProduct = products.find(item => item.id === itemId);
     localStorage.setItem('selectedProduct', JSON.stringify(selectedProduct));
     localStorage.setItem('selectedQuantity', 1); // Default quantity
     navigate(`/delivery/${itemId}`);
+  };
+
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to previous page
   };
 
   return (
@@ -123,6 +136,15 @@ const Market = () => {
       <Sidebar />
       
       <div className="flex-1 p-6">
+        <Button 
+          variant="ghost" 
+          className="p-2 h-auto mb-4"
+          onClick={handleGoBack}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        
         <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-bold text-agritech-green">Green Products Marketplace</h1>

@@ -94,6 +94,10 @@ const ProductDetails = () => {
     navigate(`/delivery/${id}`);
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to previous page
+  };
+
   if (!product) {
     return (
       <div className="flex min-h-screen bg-gray-50">
@@ -112,14 +116,14 @@ const ProductDetails = () => {
       <div className="flex-1 p-6">
         <Button 
           variant="ghost" 
-          className="mb-6"
-          onClick={() => navigate('/market')}
+          className="p-2 h-auto"
+          onClick={handleGoBack}
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Market
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
         </Button>
         
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto mt-4">
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               <div className="h-96 md:h-auto">

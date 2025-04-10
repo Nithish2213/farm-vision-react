@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Plus, Edit, Trash, Package, Tag, Eye } from 'lucide-react';
+import { Plus, Edit, Trash, Package, Tag, Eye, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -249,11 +249,24 @@ const ManageProducts = () => {
     });
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to previous page
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       
       <div className="flex-1 p-6">
+        <Button 
+          variant="ghost" 
+          className="p-2 h-auto mb-4"
+          onClick={handleGoBack}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-xl font-bold text-agritech-green">Manage Products</h1>

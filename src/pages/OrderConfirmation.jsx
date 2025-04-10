@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { CheckCircle, Package, Truck, ShoppingBag, Download } from 'lucide-react';
+import { CheckCircle, Package, Truck, ShoppingBag, Download, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -61,7 +61,7 @@ const OrderConfirmation = () => {
     
     // Add payment info
     doc.text("Payment Details:", 20, 180);
-    doc.text(`Payment Method: Google Pay (GPay)`, 25, 190);
+    doc.text(`Payment Method: ${order.paymentMethod || 'Google Pay (GPay)'}`, 25, 190);
     doc.text(`Subtotal: ₹${order.product.price * order.quantity}`, 25, 200);
     doc.text(`Delivery Fee: ₹40`, 25, 210);
     doc.text(`Total Amount: ₹${order.totalAmount}`, 25, 220);
@@ -77,6 +77,10 @@ const OrderConfirmation = () => {
       title: "Invoice Downloaded",
       description: "Your invoice has been downloaded successfully.",
     });
+  };
+
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to previous page
   };
 
   if (!order) {
@@ -95,6 +99,15 @@ const OrderConfirmation = () => {
       <Sidebar />
       
       <div className="flex-1 p-6">
+        <Button 
+          variant="ghost" 
+          className="mb-6 p-2 h-auto"
+          onClick={handleGoBack}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        
         <div className="max-w-2xl mx-auto">
           <Card className="overflow-hidden">
             <div className="bg-agritech-paleGreen p-6 text-center">
@@ -150,7 +163,7 @@ const OrderConfirmation = () => {
                   <ShoppingBag className="h-5 w-5 text-agritech-green mr-3" />
                   <div>
                     <p className="font-medium">Payment Method</p>
-                    <p className="text-sm text-gray-600">Google Pay (GPay)</p>
+                    <p className="text-sm text-gray-600">{order.paymentMethod || 'Google Pay (GPay)'}</p>
                   </div>
                 </div>
               </div>

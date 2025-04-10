@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Check } from 'lucide-react';
+import { Eye, EyeOff, Check, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Login = () => {
@@ -74,8 +74,20 @@ const Login = () => {
     }
   };
 
+  const handleGoBack = () => {
+    navigate(-1); // Navigate to previous page
+  };
+
   return (
     <div className="min-h-screen bg-agritech-paleGreen flex items-center justify-center p-4">
+      <button 
+        className="absolute top-4 left-4 p-2 text-gray-600 hover:text-gray-900"
+        onClick={handleGoBack}
+      >
+        <ArrowLeft className="h-5 w-5" />
+        <span className="sr-only">Back</span>
+      </button>
+      
       <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-5xl flex flex-col md:flex-row">
         {/* Left side - Login form */}
         <div className="p-8 md:p-12 w-full md:w-1/2">
