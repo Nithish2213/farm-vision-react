@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { CheckCircle, Package, Truck, ShoppingBag } from 'lucide-react';
+import { CheckCircle, Package, Truck, ShoppingBag, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import jsPDF from 'jspdf';
 
 const OrderConfirmation = () => {
   const { id } = useParams();
@@ -28,6 +29,55 @@ const OrderConfirmation = () => {
       setOrder(foundOrder);
     }
   }, [id, toast]);
+
+  const handleDownloadInvoice = () => {
+    if (!order) return;
+    
+    const doc = new jsPDF();
+    
+    // Add header
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(20);
+    doc.text("AgriTech - Invoice", 20, 20);
+    
+    // Add order info
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.text(`Order #: ${order.id}`, 20, 40);
+    doc.text(`Date: ${new Date(order.date).toLocaleDateString()}`, 20, 50);
+    
+    // Add product info
+    doc.text("Product Details:", 20, 70);
+    doc.text(`Product: ${order.product.name}`, 25, 80);
+    doc.text(`Quantity: ${order.quantity} ${order.product.unit}`, 25, 90);
+    doc.text(`Price: ₹${order.product.price}/${order.product.unit}`, 25, 100);
+    
+    // Add delivery info
+    doc.text("Delivery Information:", 20, 120);
+    doc.text(`Name: ${order.deliveryInfo.fullName}`, 25, 130);
+    doc.text(`Address: ${order.deliveryInfo.address}`, 25, 140);
+    doc.text(`City: ${order.deliveryInfo.city}, ${order.deliveryInfo.state} ${order.deliveryInfo.pinCode}`, 25, 150);
+    doc.text(`Phone: ${order.deliveryInfo.phoneNumber}`, 25, 160);
+    
+    // Add payment info
+    doc.text("Payment Details:", 20, 180);
+    doc.text(`Payment Method: Google Pay (GPay)`, 25, 190);
+    doc.text(`Subtotal: ₹${order.product.price * order.quantity}`, 25, 200);
+    doc.text(`Delivery Fee: ₹40`, 25, 210);
+    doc.text(`Total Amount: ₹${order.totalAmount}`, 25, 220);
+    
+    // Footer
+    doc.setFontSize(10);
+    doc.text("Thank you for shopping with AgriTech!", 20, 260);
+    
+    // Save PDF
+    doc.save(`AgriTech_Invoice_${order.id}.pdf`);
+    
+    toast({
+      title: "Invoice Downloaded",
+      description: "Your invoice has been downloaded successfully.",
+    });
+  };
 
   if (!order) {
     return (
@@ -100,7 +150,7 @@ const OrderConfirmation = () => {
                   <ShoppingBag className="h-5 w-5 text-agritech-green mr-3" />
                   <div>
                     <p className="font-medium">Payment Method</p>
-                    <p className="text-sm text-gray-600">Cash on Delivery</p>
+                    <p className="text-sm text-gray-600">Google Pay (GPay)</p>
                   </div>
                 </div>
               </div>
@@ -116,11 +166,19 @@ const OrderConfirmation = () => {
                 <Button 
                   variant="outline" 
                   className="border-agritech-green text-agritech-green hover:bg-agritech-paleGreen flex-1"
-                  onClick={() => navigate('/market')}
+                  onClick={handleDownloadInvoice}
                 >
-                  Continue Shopping
+                  <Download className="h-4 w-4 mr-2" /> Download Invoice
                 </Button>
               </div>
+              
+              <Button 
+                variant="ghost" 
+                className="w-full mt-4 text-gray-500"
+                onClick={() => navigate('/market')}
+              >
+                Continue Shopping
+              </Button>
             </CardContent>
           </Card>
         </div>

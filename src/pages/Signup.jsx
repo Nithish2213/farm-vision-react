@@ -1,13 +1,26 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Check } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useToast } from '@/hooks/use-toast';
 
 const Signup = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState('Weak');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    category: '' // 'Farmer' or 'Investor'
+  });
+  const [errors, setErrors] = useState({});
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -17,10 +30,99 @@ const Signup = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({
+      ...formData,
+      [id]: value
+    });
+
+    // Password strength check
+    if (id === 'password') {
+      if (value.length > 8) setPasswordStrength('Strong');
+      else if (value.length > 5) setPasswordStrength('Medium');
+      else setPasswordStrength('Weak');
+    }
+  };
+
+  const handleCategoryChange = (value) => {
+    setFormData({
+      ...formData,
+      category: value
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
+    
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+    
+    if (!formData.category) newErrors.category = "Please select a category";
+    
+    if (!agreedToTerms) newErrors.terms = "You must agree to the terms and conditions";
+    
+    // Check if account with same email exists for selected category
+    const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    const accountExists = existingUsers.some(user => 
+      user.email === formData.email && user.category === formData.category
+    );
+    
+    if (accountExists) {
+      newErrors.email = `Account already exists for this ${formData.category} category`;
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log('Signup form submitted');
+    
+    if (validateForm()) {
+      // Create new user
+      const newUser = {
+        id: Date.now(),
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        password: formData.password, // In a real app, this should be hashed
+        role: formData.category,
+        category: formData.category,
+        createdAt: new Date().toISOString()
+      };
+      
+      // Get existing users or create empty array
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      existingUsers.push(newUser);
+      
+      // Save to localStorage
+      localStorage.setItem('users', JSON.stringify(existingUsers));
+      
+      // Show success message
+      toast({
+        title: "Account created!",
+        description: `Your ${formData.category} account has been created successfully.`,
+      });
+      
+      // Navigate to login
+      navigate('/login');
+    }
+  };
+
+  const getPasswordStrengthColor = () => {
+    switch (passwordStrength) {
+      case 'Strong': return 'text-green-500';
+      case 'Medium': return 'text-yellow-500';
+      case 'Weak': return 'text-red-500';
+      default: return 'text-red-500';
+    }
   };
 
   return (
@@ -38,18 +140,24 @@ const Signup = () => {
                 <input 
                   type="text" 
                   id="firstName"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
+                  className={`w-full px-4 py-2 border ${errors.firstName ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
                   placeholder="Enter first name"
+                  value={formData.firstName}
+                  onChange={handleChange}
                 />
+                {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
               </div>
               <div className="flex-1">
                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
                 <input 
                   type="text" 
                   id="lastName"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
+                  className={`w-full px-4 py-2 border ${errors.lastName ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
                   placeholder="Enter last name"
+                  value={formData.lastName}
+                  onChange={handleChange}
                 />
+                {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
               </div>
             </div>
             
@@ -58,9 +166,12 @@ const Signup = () => {
               <input 
                 type="email" 
                 id="email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
+                className={`w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
                 placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
               />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
             
             <div>
@@ -69,14 +180,10 @@ const Signup = () => {
                 <input 
                   type={showPassword ? "text" : "password"} 
                   id="password"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
+                  className={`w-full px-4 py-2 border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
                   placeholder="Create password"
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val.length > 8) setPasswordStrength('Strong');
-                    else if (val.length > 5) setPasswordStrength('Medium');
-                    else setPasswordStrength('Weak');
-                  }}
+                  value={formData.password}
+                  onChange={handleChange}
                 />
                 <button 
                   type="button"
@@ -87,9 +194,10 @@ const Signup = () => {
                 </button>
               </div>
               <div className="flex justify-between mt-1">
-                <p className="text-red-500 text-xs">Weak</p>
+                <p className={getPasswordStrengthColor()}>{passwordStrength}</p>
                 <p className="text-xs">Password Strength</p>
               </div>
+              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
             </div>
             
             <div>
@@ -98,8 +206,10 @@ const Signup = () => {
                 <input 
                   type={showConfirmPassword ? "text" : "password"} 
                   id="confirmPassword"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-agritech-green focus:border-agritech-green" 
+                  className={`w-full px-4 py-2 border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-agritech-green focus:border-agritech-green`}
                   placeholder="Confirm password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                 />
                 <button 
                   type="button"
@@ -109,6 +219,55 @@ const Signup = () => {
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
+              {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">Select Your Category</label>
+              <ToggleGroup 
+                type="single" 
+                className="flex justify-center w-full gap-4"
+                value={formData.category}
+                onValueChange={handleCategoryChange}
+              >
+                <ToggleGroupItem 
+                  value="Farmer" 
+                  className={`w-1/2 h-20 border-2 rounded-lg flex flex-col items-center justify-center gap-1 ${
+                    formData.category === 'Farmer' 
+                      ? 'border-agritech-green bg-agritech-paleGreen' 
+                      : 'border-gray-200'
+                  }`}
+                >
+                  {formData.category === 'Farmer' && (
+                    <span className="absolute top-2 right-2 text-agritech-green">
+                      <Check className="h-4 w-4" />
+                    </span>
+                  )}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-agritech-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span className="font-medium">Farmer</span>
+                </ToggleGroupItem>
+                <ToggleGroupItem 
+                  value="Investor" 
+                  className={`w-1/2 h-20 border-2 rounded-lg flex flex-col items-center justify-center gap-1 ${
+                    formData.category === 'Investor' 
+                      ? 'border-agritech-green bg-agritech-paleGreen' 
+                      : 'border-gray-200'
+                  }`}
+                >
+                  {formData.category === 'Investor' && (
+                    <span className="absolute top-2 right-2 text-agritech-green">
+                      <Check className="h-4 w-4" />
+                    </span>
+                  )}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-agritech-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium">Investor</span>
+                </ToggleGroupItem>
+              </ToggleGroup>
+              {errors.category && <p className="text-red-500 text-xs mt-2 text-center">{errors.category}</p>}
             </div>
             
             <div className="flex items-start">
@@ -123,6 +282,7 @@ const Signup = () => {
                 I agree to the <Link to="/terms" className="text-agritech-green hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-agritech-green hover:underline">Privacy Policy</Link>
               </label>
             </div>
+            {errors.terms && <p className="text-red-500 text-xs mt-1">{errors.terms}</p>}
             
             <button
               type="submit"

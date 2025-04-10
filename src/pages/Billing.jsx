@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { Check, MapPin, Truck, ArrowLeft } from 'lucide-react';
+import { Check, MapPin, Truck, ArrowLeft, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -15,6 +15,7 @@ const Billing = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [deliveryInfo, setDeliveryInfo] = useState(null);
+  const [paymentMethod] = useState('Google Pay (GPay)');
   
   useEffect(() => {
     // Get selected product from localStorage
@@ -52,7 +53,8 @@ const Billing = () => {
       deliveryInfo: deliveryInfo,
       status: 'pending',
       date: new Date().toISOString(),
-      totalAmount: product.price * quantity + 40
+      totalAmount: product.price * quantity + 40,
+      paymentMethod: paymentMethod
     };
     
     // Get existing orders array or create empty one
@@ -148,12 +150,19 @@ const Billing = () => {
                 </div>
                 
                 <div className="flex items-start">
-                  <Check className="h-4 w-4 text-agritech-green mt-1 mr-2" />
+                  <CreditCard className="h-4 w-4 text-agritech-green mt-1 mr-2" />
                   <div>
                     <p className="font-medium">Payment Method</p>
-                    <p className="text-sm text-gray-600">
-                      Cash on Delivery
-                    </p>
+                    <div className="flex items-center">
+                      <img 
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Google_Pay_Logo_%282020%29.svg/1024px-Google_Pay_Logo_%282020%29.svg.png" 
+                        alt="Google Pay" 
+                        className="h-6 mr-2" 
+                      />
+                      <p className="text-sm text-gray-600">
+                        {paymentMethod}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
