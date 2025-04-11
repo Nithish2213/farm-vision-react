@@ -1,6 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { 
   Scan, 
@@ -18,6 +17,7 @@ import { Card, CardContent } from '@/components/ui/card';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   
   useEffect(() => {
     // Get user from localStorage
@@ -102,7 +102,7 @@ const Dashboard = () => {
                 Trade tools/seeds with other farmers
               </p>
               <Link 
-                to="/market"
+                to="/market-home"
                 className="block w-full py-2 bg-blue-500 text-white text-center rounded-md hover:bg-blue-600 transition-colors"
               >
                 Start Trading
