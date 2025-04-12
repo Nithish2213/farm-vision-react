@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -10,8 +9,7 @@ import {
   Leaf, 
   Sun, 
   Sprout, 
-  Seedling,
-  // Plant is not available in lucide-react, replacing with Flower2
+  Leaf as Seedling, 
   Flower2, 
   Wheat, 
   DollarSign, 
@@ -68,22 +66,18 @@ const Investment = () => {
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [progress, setProgress] = useState(68);
 
-  // Calculate expected returns (simple calculation for demo purposes)
   const calculateReturn = (amount) => {
-    // 12% annual return prorated for 8 months
     return Math.round(amount * (1 + (0.12 * 8/12)));
   };
 
-  // Timeline stages
   const timelineStages = [
     { icon: Seedling, label: 'Investment', active: true },
     { icon: Sprout, label: 'Seed Stage', active: false },
-    { icon: Flower2, label: 'Growth', active: false }, // Changed from Plant to Flower2
+    { icon: Flower2, label: 'Growth', active: false },
     { icon: Wheat, label: 'Harvest', active: false },
     { icon: DollarSign, label: 'Return', active: false },
   ];
 
-  // FAQ items
   const faqItems = [
     {
       question: 'When do I get my money back?',
@@ -129,7 +123,6 @@ const Investment = () => {
             <p className="text-gray-600">Fund sustainable agriculture and earn competitive returns</p>
           </div>
           
-          {/* Farm Overview Card */}
           <Card className="mb-8 overflow-hidden border-t-4 border-t-green-500 shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="bg-gradient-to-r from-green-50 to-transparent">
               <CardTitle className="flex items-center gap-2">
@@ -265,7 +258,6 @@ const Investment = () => {
             </CardContent>
           </Card>
           
-          {/* Investment Metrics & Projections Card */}
           <Card className="mb-8 overflow-hidden border-t-4 border-t-blue-500 shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="bg-gradient-to-r from-blue-50 to-transparent">
               <CardTitle className="flex items-center gap-2">
@@ -393,7 +385,6 @@ const Investment = () => {
             </CardContent>
           </Card>
           
-          {/* FAQ Accordion */}
           <Card className="mb-8 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
             <CardHeader>
               <CardTitle>Frequently Asked Questions</CardTitle>
@@ -422,7 +413,6 @@ const Investment = () => {
             </CardContent>
           </Card>
           
-          {/* Trust Indicators & Invest Now Section */}
           <Card className="mb-8 overflow-hidden shadow-sm hover:shadow-md transition-shadow border-green-200 bg-gradient-to-b from-white to-green-50">
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
