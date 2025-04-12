@@ -161,7 +161,7 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink 
-              to="/investments" 
+              to="/investment" 
               className={({ isActive }) => 
                 `flex items-center px-4 py-2.5 rounded-md transition-colors ${
                   isActive 
