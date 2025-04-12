@@ -16,6 +16,8 @@ import DiseaseDetection from "./pages/DiseaseDetection";
 import ScanResults from "./pages/ScanResults";
 import Feedback from "./pages/Feedback";
 import Profile from "./pages/Profile";
+import ExpertConsultation from "./pages/ExpertConsultation";
+import ExpertChat from "./pages/ExpertChat";
 import MarketHome from "./pages/MarketHome";
 import Market from "./pages/Market";
 import ProductDetails from "./pages/ProductDetails";
@@ -47,6 +49,8 @@ const App = () => (
           <Route path="/scan-results" element={<ScanResults />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/expert-consultation" element={<ExpertConsultation />} />
+          <Route path="/expert-chat/:expertId" element={<ExpertChat />} />
           
           {/* Market & Sales Routes */}
           <Route path="/market-home" element={<MarketHome />} />
