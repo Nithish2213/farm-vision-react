@@ -26,6 +26,9 @@ import Billing from "./pages/Billing";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import TrackOrders from "./pages/TrackOrders";
 import ManageProducts from "./pages/ManageProducts";
+import Investment from "./pages/Investment";
+import InvestmentDetails from "./pages/InvestmentDetails";
+import InvestmentTracking from "./pages/InvestmentTracking";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -61,6 +64,11 @@ const App = () => (
           <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
           <Route path="/track-orders" element={<TrackOrders />} />
           <Route path="/manage-products" element={<ManageProducts />} />
+          
+          {/* Investment Routes */}
+          <Route path="/investment" element={<Investment />} />
+          <Route path="/investment-details/:id" element={<InvestmentDetails />} />
+          <Route path="/investment-tracking" element={<InvestmentTracking />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
