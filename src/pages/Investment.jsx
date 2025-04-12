@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -10,7 +11,8 @@ import {
   Sun, 
   Sprout, 
   Seedling,
-  Plant, 
+  // Plant is not available in lucide-react, replacing with Flower2
+  Flower2, 
   Wheat, 
   DollarSign, 
   BarChart4, 
@@ -76,7 +78,7 @@ const Investment = () => {
   const timelineStages = [
     { icon: Seedling, label: 'Investment', active: true },
     { icon: Sprout, label: 'Seed Stage', active: false },
-    { icon: Plant, label: 'Growth', active: false },
+    { icon: Flower2, label: 'Growth', active: false }, // Changed from Plant to Flower2
     { icon: Wheat, label: 'Harvest', active: false },
     { icon: DollarSign, label: 'Return', active: false },
   ];
