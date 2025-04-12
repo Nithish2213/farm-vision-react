@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -86,7 +85,7 @@ const Investment = () => {
   const faqItems = [
     {
       question: 'When do I get my money back?',
-      answer: 'Returns are distributed after the harvest cycle, typically 8 months from the investment date. You'll receive notifications as your investment progresses through each farming stage.'
+      answer: "Returns are distributed after the harvest cycle, typically 8 months from the investment date. You'll receive notifications as your investment progresses through each farming stage."
     },
     {
       question: 'What if the crop fails?',
