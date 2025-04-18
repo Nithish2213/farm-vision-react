@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -30,6 +29,7 @@ import Investment from "./pages/Investment";
 import InvestmentDetails from "./pages/InvestmentDetails";
 import InvestmentTracking from "./pages/InvestmentTracking";
 import NotFound from "./pages/NotFound";
+import Notifications from "./pages/Notifications";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +48,7 @@ const App = () => (
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/reset-success" element={<ResetSuccess />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/notifications" element={<Notifications />} />
           <Route path="/disease-detection" element={<DiseaseDetection />} />
           <Route path="/scan-results" element={<ScanResults />} />
           <Route path="/feedback" element={<Feedback />} />
