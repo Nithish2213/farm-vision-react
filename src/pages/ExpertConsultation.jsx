@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -68,11 +67,12 @@ const experts = [
 const ExpertConsultation = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [cropType, setCropType] = useState('');
-  const [diseaseType, setDiseaseType] = useState('');
   const [soilType, setSoilType] = useState('');
   const [selectedExpert, setSelectedExpert] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
+  
+  const availableExperts = experts.filter(e => e.status === "Available Now").length;
+  
   const filteredExperts = experts.filter(expert => {
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -92,8 +92,11 @@ const ExpertConsultation = () => {
       
       <div className="flex-1 p-6">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Consult an Agricultural Expert</h1>
-          <p className="text-gray-600">Available Experts: {experts.filter(e => e.status === "Available Now").length}</p>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Consult an Agricultural Expert</h1>
+            <span className="text-green-600 font-semibold">Available Experts: {availableExperts}</span>
+          </div>
+          <p className="text-gray-600">Get expert guidance for your farming needs</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -182,14 +185,7 @@ const ExpertConsultation = () => {
                       </div>
                     </div>
 
-                    <div className="mt-4 flex justify-end space-x-3">
-                      <Button 
-                        variant="outline"
-                        className="text-purple-600 border-purple-200 hover:bg-purple-50"
-                      >
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Chat
-                      </Button>
+                    <div className="mt-4 flex justify-end">
                       <Button
                         className="bg-green-500 hover:bg-green-600 text-white"
                         onClick={() => handleAppointmentRequest(expert)}

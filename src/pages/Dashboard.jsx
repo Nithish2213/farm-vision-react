@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
@@ -111,7 +110,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Expert Consultation */}
+          {/* Expert Consultation Card */}
           <Card className="overflow-hidden shadow-sm hover:shadow-md transition-shadow border-t-4 border-t-purple-500">
             <CardContent className="p-4">
               <h3 className="text-md font-semibold mb-1">Expert Consultation</h3>

@@ -1,19 +1,13 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, User, Phone, MapPin, Leaf, ClipboardList, Check } from 'lucide-react';
+import { X, User, Phone, MapPin, Leaf, ClipboardList, Check, Bell } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 
 const AppointmentModal = ({ expert, onClose }) => {
@@ -61,12 +55,29 @@ const AppointmentModal = ({ expert, onClose }) => {
             <p className="text-gray-600 mb-6">
               You will be notified once the expert accepts or declines your request.
             </p>
-            <Button 
-              onClick={onClose}
-              className="bg-green-500 hover:bg-green-600 text-white"
-            >
-              Go Back to Experts
-            </Button>
+            <div className="space-y-3">
+              <Button 
+                onClick={() => {
+                  // Add notification logic here
+                  toast({
+                    title: "Notification Added",
+                    description: "Request notification has been added to your dashboard.",
+                    duration: 3000,
+                  });
+                }}
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <Bell className="h-4 w-4" />
+                Notify Request
+              </Button>
+              <Button 
+                onClick={onClose}
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+              >
+                Go Back to Experts
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
